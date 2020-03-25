@@ -1,15 +1,2 @@
-HELP.md
-sunday/target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**
-!**/src/test/**
-
 ### IntelliJ IDEA ###
 .idea
-sunday/.idea
-sunday/*.iws
-sunday/*.iml
-sunday/*.ipr
-
-sunday-ui/node_modules
-sunday-ui/dist/
