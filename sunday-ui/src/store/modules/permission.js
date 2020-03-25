@@ -1,7 +1,5 @@
 import {asyncRoutes, constantRoutes} from '@/router'
 import Layout from "@/layout/index";
-import it from "element-ui/src/locale/lang/it";
-import sl from "element-ui/src/locale/lang/sl";
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -96,6 +94,7 @@ const actions = {
   },
   // 异步挂载路由
   generateMenus({commit}, menus) {
+    console.log(JSON.stringify(menus))
     return new Promise(resolve => {
       let accessedRoutes = filterAsyncMenus(0, menus)
       commit('SET_ROUTES', accessedRoutes)

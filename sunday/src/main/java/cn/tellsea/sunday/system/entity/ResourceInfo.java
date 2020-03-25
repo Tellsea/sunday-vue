@@ -43,10 +43,16 @@ public class ResourceInfo extends BaseEntity {
     private Integer pid;
 
     /**
-     * URL
+     * 路由地址
      */
     @TableField("url")
     private String url;
+
+    /**
+     * 组件地址
+     */
+    @TableField("component")
+    private String component;
 
     /**
      * 权限标识
