@@ -37,7 +37,7 @@ router.beforeEach(async (to, from, next) => {
           const {roles, menus} = await store.dispatch('user/getInfo')
           // 基于角色生成可访问路由图
           // const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-          const accessRoutes = await store.dispatch('permission/generateMenus', store.getters.menus)
+          const accessRoutes = await store.dispatch('permission/generateMenus', menus)
           // 动态挂载
           router.addRoutes(accessRoutes)
           // 确保addRoutes完整的hack方法
