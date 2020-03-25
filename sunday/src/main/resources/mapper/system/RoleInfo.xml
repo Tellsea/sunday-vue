@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.tellsea.freestyle.system.mapper.RoleInfoMapper">
+<mapper namespace="cn.tellsea.sunday.system.mapper.RoleInfoMapper">
 
-    <select id="getByUserName" resultType="cn.tellsea.freestyle.system.entity.RoleInfo">
+    <select id="getByUserName" resultType="cn.tellsea.sunday.system.entity.RoleInfo">
         select c.*
         from user_info a
         left join map_user_role b on a.id = b.user_id
@@ -19,7 +19,7 @@
         </if>
     </select>
 
-    <select id="listByTable" resultType="cn.tellsea.freestyle.system.entity.RoleInfo">
+    <select id="listByTable" resultType="cn.tellsea.sunday.system.entity.RoleInfo">
         select a.*, GROUP_CONCAT(c.id) resource_ids, GROUP_CONCAT(c.name) resource_name
         from role_info a
         left join map_role_resource b on a.id = b.role_id

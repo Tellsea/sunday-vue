@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!-- 查询条件 -->
     <el-collapse value="1">
       <el-collapse-item title="" name="1">
         <el-form :inline="true" :model="searchForm" ref="searchForm">
@@ -28,9 +29,11 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
+    <!-- 操作按钮 -->
     <div class="button-container" ref="buttonContainer">
       <el-button type="primary" title="新增" @click="handleAdd">新增</el-button>
     </div>
+    <!-- 数据表格 -->
     <el-table stripe
               :data="tableData"
               :height="tableHeight"
@@ -119,12 +122,14 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页插件 -->
     <pagination v-if="tableDataCount > 0"
                 ref="pagination"
                 :total="tableDataCount"
                 :page.sync="searchForm.page"
                 :limit.sync="searchForm.limit"
                 @pagination="handlePagination"/>
+    <!-- 查看详情 -->
     <el-dialog
       title="查看用户信息"
       :visible.sync="showDialogVisible"
@@ -204,18 +209,21 @@
         tableDataCount: 0,
         showForm: {},
         showDialogVisible: false,
-        deleteVisible: false
+        deleteVisible: false,
+        add: {
+          visiable: false
+        }
       }
     },
     methods: {
-      // 加载表格数据
+      // 加载表格
       loadTable() {
         this.$api.userInfo.listByTable(this.searchForm).then(res => {
           this.tableDataCount = res.count
           this.tableData = res.data
         })
       },
-      // 处理分页
+      // 分页
       handlePagination(data) {
         this.searchForm.page = data.page
         this.searchForm.limit = data.limit
@@ -229,7 +237,7 @@
       },
       // 新增
       handleAdd() {
-        this.$router.push({path: '/userInfo/userInfoAdd'})
+        this.$router.push({path: '/system/user-info/add'})
       },
       // 查看
       handleShow(index, row) {

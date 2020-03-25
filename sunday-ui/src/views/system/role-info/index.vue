@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!-- 查询条件 -->
     <el-collapse value="1">
       <el-collapse-item title="" name="1">
         <el-form :inline="true" :model="searchForm" ref="searchForm">
@@ -15,7 +16,11 @@
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <el-button type="primary" @click="handleAdd">新增</el-button>
+    <!-- 操作按钮 -->
+    <div class="button-container" ref="button-container">
+      <el-button type="primary" @click="handleAdd">新增</el-button>
+    </div>
+    <!-- 数据表格 -->
     <el-table stripe
               :data="tableData"
               :highlight-current-row="true"
@@ -50,11 +55,13 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页插件 -->
     <pagination v-if="tableDataCount > 0"
                 :total="tableDataCount"
                 :page.sync="searchForm.page"
                 :limit.sync="searchForm.limit"
                 @pagination="handlePagination"/>
+    <!-- 新增或更新角色 -->
     <el-dialog
       :title="showDialogTitle"
       :visible.sync="showDialogVisible"

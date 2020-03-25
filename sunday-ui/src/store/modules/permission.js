@@ -1,4 +1,7 @@
 import {asyncRoutes, constantRoutes} from '@/router'
+import Layout from "@/layout/index";
+import it from "element-ui/src/locale/lang/it";
+import sl from "element-ui/src/locale/lang/sl";
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -20,7 +23,6 @@ function hasPermission(roles, route) {
  */
 export function filterAsyncRoutes(routes, roles) {
   const res = []
-
   routes.forEach(route => {
     const tmp = {...route}
     if (hasPermission(roles, tmp)) {
@@ -30,8 +32,45 @@ export function filterAsyncRoutes(routes, roles) {
       res.push(tmp)
     }
   })
-
   return res
+}
+
+/**
+ * 通过当前权限构建动态路由
+ * @param menus
+ */
+export function filterAsyncMenus(pid, menus) {
+  const menuList = []
+  menuList.push({
+    path: '/button',
+    component: Layout,
+    redirect: '/button',
+    hidden: true,
+    children: []
+  })
+  // 处理菜单
+  menus.forEach(item => {
+    if (item.component && pid == item.pid && item.type == 1) {
+      menuList.push({
+        path: item.url,
+        name: 'menu_' + item.id,
+        component: item.pid == 0 ? Layout : () => import(`@/views${item.component}`),
+        meta: {title: item.name, icon: item.icon},
+        children: filterAsyncMenus(item.id, menus)
+      })
+    }
+  })
+  // 处理按钮路由
+  menus.forEach(item => {
+    if (item.component && item.type == 2) {
+      menuList[0].children.push({
+        path: item.url,
+        component: () => import(`@/views${item.component}`),
+        meta: {title: item.name}
+      })
+    }
+  })
+  return menuList
 }
 
 const state = {
@@ -50,13 +89,7 @@ const actions = {
   // 根据当前角色生成异步路由
   generateRoutes({commit}, roles) {
     return new Promise(resolve => {
-      let accessedRoutes
-      accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      /*if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-
-      }*/
+      let accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })
@@ -64,14 +97,11 @@ const actions = {
   // 异步挂载路由
   generateMenus({commit}, menus) {
     return new Promise(resolve => {
-      let accessedRoutes
-      // 树结构 https://blog.csdn.net/acoolper/article/details/97136553
-
+      let accessedRoutes = filterAsyncMenus(0, menus)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })
   }
-
 }
 
 export default {
