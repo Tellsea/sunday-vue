@@ -22,8 +22,10 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" @click="loadTable" title="查询">
+              查询
             </el-button>
             <el-button icon="el-icon-refresh-left" @click="handleReset" title="重置">
+              重置
             </el-button>
           </el-form-item>
         </el-form>
@@ -31,14 +33,14 @@
     </el-collapse>
     <!-- 操作按钮 -->
     <div class="button-container" ref="buttonContainer">
-      <el-button type="primary" title="新增" @click="handleAdd">新增</el-button>
+      <el-button type="primary" title="新增" icon="el-icon-plus" @click="handleAdd">新增</el-button>
     </div>
     <!-- 数据表格 -->
-    <el-table stripe
-              :data="tableData"
-              :height="tableHeight"
-              :highlight-current-row="true"
-              :header-cell-style="{background:'#eef1f6', color:'#606266'}">
+    <el-table
+      :data="tableData"
+      :height="tableHeight"
+      :highlight-current-row="true"
+      :header-cell-style="{background:'#eef1f6', color:'#606266'}">
       <el-table-column
         label="序号"
         type="index"
@@ -114,11 +116,26 @@
           <el-tag type="danger" effect="dark" v-if="scope.row.status == 3">删除</el-tag>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" width="150" label="操作">
+      <el-table-column label="操作" align="center" fixed="right" width="200">
         <template slot-scope="scope">
-          <i class="el-icon-tickets el-icon-green" title="查看" @click="handleShow(scope.$index, scope.row)"></i>
-          <i class="el-icon-edit el-icon-blue" title="编辑" @click="handleEdit(scope.$index, scope.row)"></i>
-          <i class="el-icon-delete el-icon-red" title="删除" @click="handleDelete(scope.$index, scope.row)"></i>
+          <el-button
+            type="text"
+            icon="el-icon-tickets"
+            @click="handleShow(scope.row)">
+            详情
+          </el-button>
+          <el-button
+            type="text"
+            icon="el-icon-edit"
+            @click="handleEdit(scope.row)">
+            编辑
+          </el-button>
+          <el-button
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)">
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -233,23 +250,23 @@
       handleReset() {
         this.$refs['searchForm'].resetFields()
         this.searchForm.status = '0'
-        this.handlePagination({page: 0, limit: 10});
+        this.handlePagination({page: 0, limit: 10})
       },
       // 新增
       handleAdd() {
         this.$router.push({path: '/system/user-info/add'})
       },
       // 查看
-      handleShow(index, row) {
+      handleShow(row) {
         this.showDialogVisible = true
         this.showForm = row
       },
       // 编辑
-      handleEdit(index, row) {
-        this.$router.push({path: '/userInfo/userInfoUpdate', query: {id: row.id}})
+      handleEdit(row) {
+        this.$router.push({path: '/system/user-info/update', query: {id: row.id}})
       },
       // 删除
-      handleDelete(index, row) {
+      handleDelete(row) {
         this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

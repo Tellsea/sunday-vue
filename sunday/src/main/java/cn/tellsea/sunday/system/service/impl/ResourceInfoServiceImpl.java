@@ -1,9 +1,12 @@
 package cn.tellsea.sunday.system.service.impl;
 
+import cn.tellsea.sunday.common.entity.ResponseResult;
 import cn.tellsea.sunday.system.entity.ResourceInfo;
 import cn.tellsea.sunday.system.mapper.ResourceInfoMapper;
 import cn.tellsea.sunday.system.service.ResourceInfoService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,13 @@ public class ResourceInfoServiceImpl extends ServiceImpl<ResourceInfoMapper, Res
 
     @Override
     public List<ResourceInfo> listByTree() {
+        return createTree(0, this.baseMapper.selectList(new LambdaQueryWrapper<ResourceInfo>().orderByAsc(ResourceInfo::getSort)));
+    }
+
+    @Override
+    public List<ResourceInfo> listByTable(ResourceInfo resourceInfo) {
+        /*Page<ResourceInfo> page = this.baseMapper.selectPage(new Page<>(resourceInfo.getPage(), resourceInfo.getLimit()), new QueryWrapper<>());
+        return ResponseResult.table(Math.toIntExact(page.getPages()), createTree(0, page.getRecords()));*/
         return createTree(0, this.baseMapper.selectList(new LambdaQueryWrapper<ResourceInfo>().orderByAsc(ResourceInfo::getSort)));
     }
 

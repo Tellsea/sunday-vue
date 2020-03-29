@@ -25,7 +25,7 @@ public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @ApiOperation("用户列表")
+    @ApiOperation("数据表格")
     @PostMapping("listByTable")
     public ResponseResult listByTable(UserInfo userInfo) {
         return userInfoService.listByTable(userInfo);
@@ -36,6 +36,12 @@ public class UserInfoController {
     public ResponseResult save(UserInfo userInfo) {
         userInfoService.saveUserInfo(userInfo);
         return ResponseResult.success(StatusEnums.SAVE_SUCCESS);
+    }
+
+    @ApiOperation("根据id查询用户")
+    @PostMapping("getById")
+    public ResponseResult getById(int id) {
+        return ResponseResult.success(userInfoService.getUserInfoById(id));
     }
 
     @ApiOperation("更新用户")

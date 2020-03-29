@@ -113,8 +113,10 @@
           sm: 12,
           md: 8
         },
+        upload: '',
         // 表单数据
         dataForm: {
+          id: 0,
           userName: '',
           nickName: '',
           password: '',
@@ -123,7 +125,7 @@
           sex: 0,
           description: '',
           status: 1,
-          roleIds: []
+          roleIds: ''
         },
         // 表单规则
         rules: {
@@ -178,11 +180,12 @@
           if (valid) {
             this.submitLoading = true
             this.dataForm.roleIds = this.dataForm.roleIds.join(',')
-            this.$api.userInfo.save(this.dataForm).then(res => {
+            this.$api.userInfo.update(this.dataForm).then(res => {
               this.$message.success({
                 message: res.message,
                 onClose: () => {
-                  this.$router.push('/system/user-info/index');
+                  // this.$router.push('/system/user-info/index');
+                  this.$router.go(-1)
                 }
               })
             })
@@ -199,6 +202,11 @@
     },
     created() {
       this.loadRoleList()
+      // 加载用户信息
+      this.$api.userInfo.getById({id: this.$route.query.id}).then(res => {
+        this.dataForm = res.data
+        this.dataForm.roleIds = res.data.roleIds.split(',').map(Number)
+      })
     }
   }
 </script>

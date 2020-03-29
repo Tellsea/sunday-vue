@@ -130,7 +130,7 @@ aside {
 }
 
 .button-container {
-  margin-bottom: 5px;
+  margin: 5px auto;
 }
 
 .text-center {
@@ -191,24 +191,24 @@ aside {
 }
 
 // 表格图标样式
-.el-table__row i {
-  font-size: 16px;
-  margin: auto 3px;
-}
+//.el-table__row i {
+//  font-size: 16px;
+//  margin: auto 3px;
+//}
 .el-icon-blue {
-  color: rgb(64, 158, 255);
+  color: rgb(64, 158, 255) !important;
 }
 .el-icon-green {
-  color: rgb(103, 194, 58);
+  color: rgb(103, 194, 58) !important;
 }
 .el-icon-gray {
-  color: rgb(144, 147, 153);
+  color: rgb(144, 147, 153) !important;
 }
 .el-icon-yellow {
-  color: rgb(230, 162, 60);
+  color: rgb(230, 162, 60) !important;
 }
 .el-icon-red {
-  color: rgb(245, 108, 108);
+  color: rgb(245, 108, 108) !important;
 }
 
 // 修改折叠面板样式

@@ -1,232 +1,244 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-col :md="10" :sm="24">
-        <el-button type="primary" @click="treeAppendRoot">
-          新增一级菜单
-        </el-button>
-        <el-button type="primary" @click="treeExpandChange(true)">
-          展开全部
-        </el-button>
-        <el-button type="primary" @click="treeExpandChange(false)">
-          折叠全部
-        </el-button>
-        <div class="tree-scroll-bar">
-          <el-tree
-            :data="treeData"
-            node-key="id"
-            ref="tree"
-            :default-expand-all="treeExpandAll"
-            :expand-on-click-node="false"
-            :props="treeProps"
-            @node-click="treeNodeClick">
-          <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span>{{ node.label }}</span>
-            <span>
-              <el-button
-                type="text"
-                size="mini"
-                @click="() => treeAppend(data)">
-                添加
-              </el-button>
-              <el-button
-                type="text"
-                size="mini"
-                @click="() => treeRemove(node, data)">
-                删除
-              </el-button>
-            </span>
-          </span>
-          </el-tree>
-        </div>
-      </el-col>
-      <el-col :md="14" :sm="24">
-        <div class="app-roll-fix">
-          <el-form :model="dataForm" :rules="rules" ref="dataForm" label-width="100px">
-            <el-form-item label="名称" prop="name">
-              <el-input v-model="dataForm.name" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="权限" prop="perms">
-              <el-input v-model="dataForm.perms"
-                        placeholder="例如：add、update、delete、select、detail)"></el-input>
-            </el-form-item>
-            <el-form-item label="类型" prop="type">
-              <el-radio-group v-model="dataForm.type">
-                <el-radio label="0">未使用</el-radio>
-                <el-radio label="1">菜单</el-radio>
-                <el-radio label="2">按钮</el-radio>
-                <el-radio label="3">链接</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="路径" prop="url">
-              <el-input v-model="dataForm.url" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="图标" prop="icon">
-              <el-input v-model="dataForm.icon" placeholder="请输入"
-                        suffix-icon="dataForm.icon"></el-input>
-            </el-form-item>
-            <el-form-item label="排序" prop="sort">
-              <el-input type="number" v-model="dataForm.sort" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :loading="submitLoading" @click="submitForm">保存
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-col>
-    </el-row>
+    <!-- 数据表格 -->
+    <el-table
+      :data="tableData"
+      row-key="id"
+      :highlight-current-row="true"
+      :header-cell-style="{background:'#eef1f6', color:'#606266'}"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+      <el-table-column
+        prop="name"
+        label="权限名称">
+      </el-table-column>
+      <el-table-column
+        label="菜单图标"
+        align="center"
+        width="100">
+        <template slot-scope="scope">
+          <svg-icon v-if="scope.row.icon" :icon-class="scope.row.icon"/>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="url"
+        label="路由地址">
+      </el-table-column>
+      <el-table-column
+        prop="component"
+        label="组件地址">
+      </el-table-column>
+      <el-table-column
+        prop="perms"
+        label="权限标识" width="150">
+      </el-table-column>
+      <el-table-column
+        label="类型" width="100">
+        <template slot-scope="scope">
+          <div v-if="scope.row.type == 0">未使用</div>
+          <div v-if="scope.row.type == 1">菜单</div>
+          <div v-if="scope.row.type == 2">按钮</div>
+          <div v-if="scope.row.type == 3">链接</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="sort"
+        sortable
+        label="排序" width="100">
+      </el-table-column>
+      <el-table-column label="操作" align="center" fixed="right" width="200">
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            icon="el-icon-plus"
+            @click="handleAdd(scope.row)">
+            新增
+          </el-button>
+          <el-button
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)">
+            修改
+          </el-button>
+          <el-button
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)">
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- 新增或更新权限 -->
+    <el-dialog
+      :title="showDialogTitle"
+      :visible.sync="showDialogVisible"
+      @close="closeDialog"
+      width="500px">
+      <el-form :model="dataForm" :rules="rules" ref="dataForm" label-width="100px">
+        <el-form-item label="权限名称" prop="name">
+          <el-input v-model="dataForm.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="权限标识" prop="perms">
+          <el-input v-model="dataForm.perms"
+                    placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="权限类型" prop="type">
+          <el-radio-group v-model="dataForm.type">
+            <el-radio :label="1">菜单</el-radio>
+            <el-radio :label="2">按钮</el-radio>
+            <el-radio :label="3">链接</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="路由地址" prop="url">
+          <el-input v-model="dataForm.url" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="组件地址" prop="component">
+          <el-input v-model="dataForm.component" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="图标" prop="icon">
+          <el-input v-model="dataForm.icon" placeholder="请输入"
+                    suffix-icon="dataForm.icon"></el-input>
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input type="number" v-model="dataForm.sort" placeholder="请输入"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="showDialogVisible=false">取消</el-button>
+          <el-button type="primary" :loading="submitLoading" @click="handleSubmit">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   export default {
-    name: "resourceInfoList",
     data() {
       return {
-        submitLoading: false,
-        treeData: [],
+        // 表格数据
+        tableData: [],
+        // 表格分页
+        treeProps: {
+          children: 'children',
+          label: 'name'
+        },
+        // 表单
         dataForm: {
           id: 0,
+          pid: 0,
           name: '',
           url: '',
+          component: '',
           perms: '',
-          type: '0',
+          type: 1,
           icon: '',
           sort: 0,
         },
+        // 表单规则
         rules: {
           name: [{required: true, message: '请输入', trigger: 'blur'}],
           perms: [{required: true, message: '请输入', trigger: 'blur'}],
         },
-        treeExpandAll: true,
-        treeProps: {
-          children: 'children',
-          label: 'name'
-        }
+        // 对话框标题
+        showDialogTitle: '',
+        // 对话框是否显示
+        showDialogVisible: false,
+        // 提交按钮
+        submitLoading: false
       }
     },
     methods: {
-      // 树添加根节点
-      treeAppendRoot() {
-        let param = {
-          name: '(空)',
-          perms: 'test'
-        }
-        this.$api.resourceInfo.save(param).then(res => {
-          this.$message.success({
-            message: res.message,
-            onClose: () => {
-              this.loadResourceTree()
-            }
-          })
+      // 加载表格
+      loadTable() {
+        this.$api.resourceInfo.listByTable().then(res => {
+          this.tableData = res.data
         })
       },
-      // 树添加
-      treeAppend(data) {
-        let param = {
-          pid: data.id,
-          name: '(空)',
-          perms: 'test'
-        }
-        this.$api.resourceInfo.save(param).then(res => {
-          this.$message.success({
-            message: res.message,
-            onClose: () => {
-              this.loadResourceTree()
-            }
-          })
+      // 关闭对话框
+      closeDialog() {
+        this.$nextTick(() => {
+          if (this.$refs.dataForm !== undefined) {
+            this.$refs.dataForm.resetFields()
+          }
         })
+        this.submitLoading = false
       },
-      // 树删除
-      treeRemove(node, data) {
-        const parent = node.parent;
-        const children = parent.data.children || parent.data;
-        const index = children.findIndex(d => d.id === data.id);
-        children.splice(index, 1);
-        this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'error'
-        }).then(() => {
-          this.$api.resourceInfo.deleteById({id: data.id}).then(res => {
-            this.$message.success({
-              message: res.message,
-              onClose: () => {
-                this.loadResourceTree()
-              }
-            })
-          })
+      // 新增按钮
+      handleAdd(row) {
+        this.$nextTick(() => {
+          if (this.$refs.dataForm !== undefined) {
+            this.$refs.dataForm.resetFields()
+          }
         })
+        this.dataForm.pid = row.id
+        this.showDialogTitle = '新增权限'
+        this.showDialogVisible = true
       },
-      // 树点击节点
-      treeNodeClick(data, node) {
-        data.type = String(data.type)
-        this.dataForm = data
+      // 编辑按钮
+      handleUpdate(row) {
+        this.showDialogTitle = '编辑权限'
+        this.showDialogVisible = true
+        this.dataForm = row
       },
-      // 树修改展开状态
-      treeExpandChange(status) {
-        this.treeExpandAll = status
-        for (let j = 0; j < this.$refs.tree.store._getAllNodes().length; j++) {
-          this.$refs.tree.store._getAllNodes()[j].expanded = this.treeExpandAll
-        }
-      },
-      // 表单提交
-      submitForm() {
-        if (this.dataForm.id === 0) {
-          this.$message.error('请选择左侧节点')
-          return false
-        }
+      // 新增/更新
+      handleSubmit() {
         this.$refs.dataForm.validate((valid) => {
           if (valid) {
             this.submitLoading = true
-            this.$api.resourceInfo.update(this.dataForm).then(res => {
-              this.$message.success({
-                message: res.message,
-                onClose: () => {
-                  this.submitLoading = false
-                }
+            if (this.dataForm.id == 0) {
+              this.$api.resourceInfo.save(this.dataForm).then(res => {
+                this.$message.success({
+                  message: res.message,
+                  onClose: () => {
+                    this.showDialogVisible = false
+                    this.loadTable()
+                  }
+                })
               })
-            })
+            } else {
+              this.$api.resourceInfo.update(this.dataForm).then(res => {
+                this.$message.success({
+                  message: res.message,
+                  onClose: () => {
+                    this.showDialogVisible = false
+                    this.loadTable()
+                  }
+                })
+              })
+            }
           } else {
             this.$message.error('请完善表单信息')
             return false
           }
         });
       },
-      // 设置树选中
-      setTreeSelect(data) {
-        this.$nextTick(() => {
-          this.$refs.tree.setCheckedKeys(data);
+      // 删除
+      handleDelete(index, row) {
+        this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(() => {
+          let param = {
+            id: row.id
+          };
+          this.$api.roleInfo.deleteById(param).then(res => {
+            this.$message.success({
+              message: res.message,
+              onClose: () => {
+                this.loadTable();
+              }
+            })
+          })
         });
-      },
-      // 加载资源树
-      loadResourceTree() {
-        this.$api.resourceInfo.listByTree().then(res => {
-          this.treeData = res.data
-        })
       }
     },
     mounted() {
-      this.loadResourceTree()
+      this.loadTable()
     }
   }
 </script>
 
 <style scoped>
-  .tree-scroll-bar {
-    margin-top: 20px;
-    height: calc(100vh - 156px);
-    overflow: auto;
-  }
 
-  /*树按钮*/
-  .custom-tree-node {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 14px;
-    padding-right: 8px;
-  }
 </style>

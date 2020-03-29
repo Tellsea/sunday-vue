@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === 'production') {
 import Pagination from './components/Pagination'
 Vue.component(Pagination.name, Pagination)
 
-// set ElementUI lang to EN
+// set ElementUI lang to EN  medium / small / mini
 Vue.use(ElementUI, {size: 'small'})
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)

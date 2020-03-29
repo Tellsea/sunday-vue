@@ -58,7 +58,7 @@ export function filterAsyncMenus(pid, menus) {
       })
     }
   })
-  // 处理按钮路由
+  // 处理按钮路由，可以挂载到静态路由上、测试是否生成tag
   menus.forEach(item => {
     if (item.component && item.type == 2) {
       menuList[0].children.push({
@@ -94,9 +94,9 @@ const actions = {
   },
   // 异步挂载路由
   generateMenus({commit}, menus) {
-    console.log(JSON.stringify(menus))
     return new Promise(resolve => {
       let accessedRoutes = filterAsyncMenus(0, menus)
+      accessedRoutes.push({path: '*', redirect: '/404', hidden: true})
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

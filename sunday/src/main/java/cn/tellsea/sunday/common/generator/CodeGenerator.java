@@ -25,9 +25,9 @@ import java.util.Scanner;
 public class CodeGenerator {
 
     // 数据库 URL
-    private static final String URL = "jdbc:mysql://47.107.171.232:3306/vue_sunday?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://47.107.171.232:3306/sunday_base?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     // 数据库驱动
-    private static final String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
+    private static final String DRIVER_NAME = "com.mysql.jdbc.Driver";
     // 数据库用户名
     private static final String USERNAME = "root";
     // 数据库密码

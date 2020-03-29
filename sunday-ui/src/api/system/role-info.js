@@ -4,8 +4,8 @@ const roleInfo = {
   listByTable(data) {
     return request.post('/system/roleInfo/listByTable', data)
   },
-  list() {
-    return request.get('/system/roleInfo/list')
+  listByAll() {
+    return request.get('/system/roleInfo/listByAll')
   },
   save(data) {
     return request.post('/system/roleInfo/save', data)

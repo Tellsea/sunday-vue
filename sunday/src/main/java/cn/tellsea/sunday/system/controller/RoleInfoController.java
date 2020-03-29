@@ -7,6 +7,7 @@ import cn.tellsea.sunday.system.service.RoleInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,10 +26,16 @@ public class RoleInfoController {
     @Autowired
     private RoleInfoService roleInfoService;
 
-    @ApiOperation("角色列表")
+    @ApiOperation("数据表格")
     @PostMapping("listByTable")
     public ResponseResult listByTable(RoleInfo roleInfo) {
         return roleInfoService.listByTable(roleInfo);
+    }
+
+    @ApiOperation("所有角色")
+    @GetMapping("listByAll")
+    public ResponseResult listByAll() {
+        return ResponseResult.success(roleInfoService.listRoleInfoByAll());
     }
 
     @ApiOperation("新增角色")

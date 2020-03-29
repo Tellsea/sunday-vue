@@ -9,8 +9,10 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" @click="loadTable" title="查询">
+              查询
             </el-button>
             <el-button icon="el-icon-refresh-left" @click="handleReset" title="重置">
+              重置
             </el-button>
           </el-form-item>
         </el-form>
@@ -18,13 +20,13 @@
     </el-collapse>
     <!-- 操作按钮 -->
     <div class="button-container" ref="button-container">
-      <el-button type="primary" @click="handleAdd">新增</el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="handleAdd">新增</el-button>
     </div>
     <!-- 数据表格 -->
-    <el-table stripe
-              :data="tableData"
-              :highlight-current-row="true"
-              :header-cell-style="{background:'#eef1f6', color:'#606266'}">
+    <el-table
+      :data="tableData"
+      :highlight-current-row="true"
+      :header-cell-style="{background:'#eef1f6', color:'#606266'}">
       <el-table-column
         label="序号"
         type="index"
@@ -48,10 +50,20 @@
           <p>{{scope.row.resourceName}}</p>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" width="120" label="操作">
+      <el-table-column label="操作" align="center" fixed="right" width="140">
         <template slot-scope="scope">
-          <i class="el-icon-edit el-icon-blue" title="编辑" @click="handleEdit(scope.$index, scope.row)"></i>
-          <i class="el-icon-delete el-icon-red" title="删除" @click="handleDelete(scope.$index, scope.row)"></i>
+          <el-button
+            type="text"
+            icon="el-icon-edit"
+            @click="handleEdit(scope.row)">
+            修改
+          </el-button>
+          <el-button
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)">
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -175,7 +187,7 @@
         this.showDialogVisible = true
       },
       // 编辑按钮
-      handleEdit(index, row) {
+      handleEdit(row) {
         this.showDialogTitle = '编辑角色'
         this.showDialogVisible = true
         this.dataForm.id = row.id

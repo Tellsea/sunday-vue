@@ -42,6 +42,11 @@ public class RoleInfoServiceImpl extends ServiceImpl<RoleInfoMapper, RoleInfo> i
     }
 
     @Override
+    public List<RoleInfo> listRoleInfoByAll() {
+        return this.baseMapper.selectList(null);
+    }
+
+    @Override
     public void saveRole(RoleInfo roleInfo) {
         this.baseMapper.insert(roleInfo);
         saveMapRoleResource(roleInfo);

@@ -2,6 +2,7 @@ package cn.tellsea.sunday.common.entity;
 
 import cn.tellsea.sunday.common.enums.BaseEnums;
 import cn.tellsea.sunday.common.enums.StatusEnums;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -86,5 +87,12 @@ public class ResponseResult implements Serializable {
                 .setMessage(StatusEnums.SELECT_SUCCESS.getInfo())
                 .setCount(count)
                 .setData(data);
+    }
+
+    public static ResponseResult table(Page page) {
+        return new ResponseResult().setCode(StatusEnums.SELECT_SUCCESS.getCode())
+                .setMessage(StatusEnums.SELECT_SUCCESS.getInfo())
+                .setCount(Math.toIntExact(page.getPages()))
+                .setData(page.getRecords());
     }
 }

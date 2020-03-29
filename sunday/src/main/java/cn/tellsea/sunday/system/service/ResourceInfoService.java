@@ -15,5 +15,7 @@ public interface ResourceInfoService extends IService<ResourceInfo> {
 
     List<ResourceInfo> getByUserName(String userName);
 
+    List<ResourceInfo> listByTable(ResourceInfo resourceInfo);
+
     List<ResourceInfo> listByTree();
 }

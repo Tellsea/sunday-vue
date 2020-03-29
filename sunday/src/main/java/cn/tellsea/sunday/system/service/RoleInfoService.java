@@ -18,6 +18,8 @@ public interface RoleInfoService extends IService<RoleInfo> {
 
     ResponseResult listByTable(RoleInfo roleInfo);
 
+    List<RoleInfo> listRoleInfoByAll();
+
     void saveRole(RoleInfo roleInfo);
 
     void updateRole(RoleInfo roleInfo);

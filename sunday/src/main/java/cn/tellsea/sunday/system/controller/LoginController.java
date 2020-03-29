@@ -14,6 +14,7 @@ import cn.tellsea.sunday.system.service.RoleInfoService;
 import cn.tellsea.sunday.system.service.UserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
  * @author Tellsea
  * @date 2020-03-04
  */
+@Slf4j
 @Api(tags = "登录接口")
 @Validated
 @RestController
@@ -91,6 +93,12 @@ public class LoginController {
         return ResponseResult.success(userInfo);
     }
 
+    @ApiOperation("退出登录")
+    @PostMapping("logout")
+    public ResponseResult logout() {
+        log.info("退出登录");
+        return ResponseResult.successMsg("退出成功");
+    }
 
     @GetMapping("admin")
     @RequiresRoles("admin")

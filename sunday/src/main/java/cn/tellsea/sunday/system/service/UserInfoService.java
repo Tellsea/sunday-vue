@@ -14,6 +14,8 @@ public interface UserInfoService extends IService<UserInfo> {
 
     UserInfo getByUserName(String userName);
 
+    UserInfo getUserInfoById(int id);
+
     ResponseResult listByTable(UserInfo userInfo);
 
     void saveUserInfo(UserInfo userInfo);
@@ -21,4 +23,5 @@ public interface UserInfoService extends IService<UserInfo> {
     void updateUserInfo(UserInfo userInfo);
 
     void updateStatus(UserInfo userInfo);
+
 }

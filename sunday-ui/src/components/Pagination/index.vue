@@ -85,6 +85,7 @@
 <style scoped>
   .pagination-container {
     padding-top: 10px;
+    text-align: right;
   }
 
   .pagination-container.hidden {

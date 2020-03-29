@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tellsea.sunday.system.mapper.LoginLogMapper">
+
+    <select id="countByTable" resultType="java.lang.Integer">
+        select count(*) from login_log a
+        left join user_info b on a.user_id = b.id
+        where 1 = 1
+        <if test="entity.userName != null and entity.userName != ''">
+            and b.user_name like concat('%',#{entity.userName},'%')
+        </if>
+    </select>
+
+    <select id="listByTable" resultType="cn.tellsea.sunday.system.entity.LoginLog">
+        select a.*, b.user_name user_name
+        from login_log a
+        left join user_info b on a.user_id = b.id
+        where 1 = 1
+        <if test="entity.userName != null and entity.userName != ''">
+            and b.user_name like concat('%',#{entity.userName},'%')
+        </if>
+        order by a.create_time desc
+        limit #{entity.page}, #{entity.limit}
+    </select>
+</mapper>

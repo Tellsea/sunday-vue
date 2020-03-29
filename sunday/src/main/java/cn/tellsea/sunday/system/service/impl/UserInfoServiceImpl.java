@@ -33,6 +33,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     }
 
     @Override
+    public UserInfo getUserInfoById(int id) {
+        return this.baseMapper.getUserInfoById(id);
+    }
+
+    @Override
     public ResponseResult listByTable(UserInfo userInfo) {
         int count = this.baseMapper.countByTable(userInfo);
         List<UserInfo> list = new ArrayList<>();
@@ -45,17 +50,17 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Override
     public void saveUserInfo(UserInfo userInfo) {
         this.baseMapper.insert(userInfo);
-        saveMapUesrRole(userInfo);
+        saveMapUserRole(userInfo);
     }
 
     @Override
     public void updateUserInfo(UserInfo userInfo) {
         this.updateById(userInfo);
         mapUserRoleService.remove(new LambdaUpdateWrapper<MapUserRole>().eq(MapUserRole::getUserId, userInfo.getId()));
-        saveMapUesrRole(userInfo);
+        saveMapUserRole(userInfo);
     }
 
-    private void saveMapUesrRole(UserInfo userInfo) {
+    private void saveMapUserRole(UserInfo userInfo) {
         String[] split = userInfo.getRoleIds().split(",");
         List<MapUserRole> list = new ArrayList<>();
         for (int i = 0; i < split.length; i++) {

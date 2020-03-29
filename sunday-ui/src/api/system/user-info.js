@@ -7,6 +7,9 @@ const roleInfo = {
   save(data) {
     return request.post('/system/userInfo/save', data)
   },
+  getById(data) {
+    return request.post('/system/userInfo/getById', data)
+  },
   update(data) {
     return request.post('/system/userInfo/update', data)
   },
