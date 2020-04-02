@@ -7,9 +7,6 @@ const systemLog = {
   delete(data) {
     return request.post('/system/systemLog/delete', data)
   },
-  export(data) {
-    return request.post('/system/systemLog/export', data)
-  }
 }
 
 export default systemLog

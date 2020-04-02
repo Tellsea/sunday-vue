@@ -19,6 +19,8 @@ import java.util.Scanner;
  * 可以快速生成 Entity、Mapper、Mapper XML、Service、Controller 等各个模块的代码
  *
  * @link https://mp.baomidou.com/guide/generator.html
+ * todo 时间类型判断
+ * todo 超类
  * @author: Tellsea
  * @date : 2020/3/2
  */

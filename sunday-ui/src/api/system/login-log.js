@@ -7,9 +7,6 @@ const loginLog = {
   deleteByIds(data) {
     return request.post('/system/loginLog/deleteByIds', data)
   },
-  export(data) {
-    return request.post('/system/loginLog/export', data)
-  }
 }
 
 export default loginLog

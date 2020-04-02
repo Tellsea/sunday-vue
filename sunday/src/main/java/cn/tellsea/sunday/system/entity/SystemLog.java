@@ -1,18 +1,13 @@
 package cn.tellsea.sunday.system.entity;
 
 import cn.tellsea.sunday.common.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-
-import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableField;
-
+import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 /**
  * 系统日志表 实体类
@@ -84,7 +79,8 @@ public class SystemLog extends BaseEntity {
      * 操作时间
      */
     @TableField("create_time")
-    private LocalDateTime createTime;
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 
     /**
      * 状态(1正常，2删除)
@@ -92,4 +88,7 @@ public class SystemLog extends BaseEntity {
     @TableField("status")
     @TableLogic
     private Integer status;
+
+    @TableField(exist = false)
+    private String userName;
 }

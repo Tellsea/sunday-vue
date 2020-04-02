@@ -26,16 +26,10 @@ public class ResourceInfoController {
     @Autowired
     private ResourceInfoService resourceInfoService;
 
-    @ApiOperation("数据表格")
-    @PostMapping("listByTable")
-    public ResponseResult listByTable(ResourceInfo resourceInfo) {
-        return ResponseResult.success(resourceInfoService.listByTable(resourceInfo));
-    }
-
     @ApiOperation("资源树")
-    @GetMapping("listByTree")
-    public ResponseResult listByTree() {
-        return ResponseResult.success(resourceInfoService.listByTree());
+    @PostMapping("listByTree")
+    public ResponseResult listByTree(ResourceInfo resourceInfo) {
+        return ResponseResult.success(resourceInfoService.listByTree(resourceInfo));
     }
 
     @ApiOperation("新增资源")

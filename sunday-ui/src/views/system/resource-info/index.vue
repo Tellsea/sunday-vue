@@ -1,5 +1,23 @@
 <template>
   <div class="app-container">
+    <!-- 查询条件 -->
+    <el-collapse value="1">
+      <el-collapse-item name="1">
+        <el-form :inline="true" :model="searchForm" ref="searchForm">
+          <el-form-item label="菜单名称" prop="name">
+            <el-input v-model="searchForm.name" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" @click="loadTable" title="查询">
+              查询
+            </el-button>
+            <el-button icon="el-icon-refresh-left" @click="handleReset" title="重置">
+              重置
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-collapse-item>
+    </el-collapse>
     <!-- 数据表格 -->
     <el-table
       :data="tableData"
@@ -9,7 +27,7 @@
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column
         prop="name"
-        label="权限名称">
+        label="菜单名称">
       </el-table-column>
       <el-table-column
         label="菜单图标"
@@ -68,7 +86,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 新增或更新权限 -->
+    <!-- 新增或编辑菜单 -->
     <el-dialog
       :title="showDialogTitle"
       :visible.sync="showDialogVisible"
@@ -115,6 +133,10 @@
   export default {
     data() {
       return {
+        // 查询条件
+        searchForm: {
+          name: ''
+        },
         // 表格数据
         tableData: [],
         // 表格分页
@@ -150,9 +172,13 @@
     methods: {
       // 加载表格
       loadTable() {
-        this.$api.resourceInfo.listByTable().then(res => {
+        this.$api.resourceInfo.listByTree(this.searchForm).then(res => {
           this.tableData = res.data
         })
+      },
+      // 重置
+      handleReset() {
+        this.$refs['searchForm'].resetFields()
       },
       // 关闭对话框
       closeDialog() {
@@ -171,12 +197,12 @@
           }
         })
         this.dataForm.pid = row.id
-        this.showDialogTitle = '新增权限'
+        this.showDialogTitle = '新增菜单'
         this.showDialogVisible = true
       },
       // 编辑按钮
       handleUpdate(row) {
-        this.showDialogTitle = '编辑权限'
+        this.showDialogTitle = '编辑菜单'
         this.showDialogVisible = true
         this.dataForm = row
       },

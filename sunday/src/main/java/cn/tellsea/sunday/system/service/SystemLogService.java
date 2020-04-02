@@ -1,5 +1,6 @@
 package cn.tellsea.sunday.system.service;
 
+import cn.tellsea.sunday.common.entity.ResponseResult;
 import cn.tellsea.sunday.system.entity.SystemLog;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -11,4 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SystemLogService extends IService<SystemLog> {
 
+    ResponseResult listByTable(SystemLog systemLog);
+
+    void deleteSystemLogByIds(String ids);
 }

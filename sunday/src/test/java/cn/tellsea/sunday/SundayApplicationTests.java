@@ -2,16 +2,19 @@ package cn.tellsea.sunday;
 
 import cn.tellsea.sunday.system.entity.ResourceInfo;
 import cn.tellsea.sunday.system.entity.Student;
+import cn.tellsea.sunday.system.mapper.ResourceInfoMapper;
 import cn.tellsea.sunday.system.mapper.UserInfoMapper;
 import cn.tellsea.sunday.system.service.ResourceInfoService;
 import cn.tellsea.sunday.system.service.StudentService;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +26,12 @@ class SundayApplicationTests {
 
     @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private ResourceInfoService resourceInfoService;
+    @Autowired
+    private ResourceInfoMapper resourceInfoMapper;
 
     @Test
     void contextLoads() {
@@ -90,11 +99,6 @@ class SundayApplicationTests {
         System.out.println("解密:" + decryptPassword);*/
     }
 
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private ResourceInfoService resourceInfoService;
-
     @Test
     public void dyDataSource() {
         List<Student> studentList = studentService.list();
@@ -118,5 +122,22 @@ class SundayApplicationTests {
                                 new ResourceInfo().setName("tom"),
                                 new ResourceInfo().setName("susan"))));
         System.out.println(jsonString);
+    }
+
+    @Test
+    public void queryTree() {
+        List<ResourceInfo> list = resourceInfoMapper.selectList(Wrappers.<ResourceInfo>lambdaQuery().like(ResourceInfo::getName, "新增"));
+        List<ResourceInfo> tree = createTree(0, list);
+        System.out.println(JSON.toJSON(tree));
+    }
+
+    private List<ResourceInfo> createTree(Integer pid, List<ResourceInfo> rootList) {
+        List<ResourceInfo> treeList = new ArrayList<>();
+        rootList.forEach(info -> {
+            if (pid.equals(info.getPid())) {
+                treeList.add(info.setChildren(createTree(info.getId(), rootList)));
+            }
+        });
+        return treeList;
     }
 }

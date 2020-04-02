@@ -82,7 +82,7 @@
         <el-row>
           <el-form-item style="text-align: center;">
             <el-button type="primary" :loading="submitLoading" @click="submitForm('dataForm')">保存</el-button>
-            <el-button @click="resetForm('dataForm')">重置</el-button>
+            <!--<el-button @click="resetForm('dataForm')">重置</el-button>-->
           </el-form-item>
         </el-row>
       </el-form>
