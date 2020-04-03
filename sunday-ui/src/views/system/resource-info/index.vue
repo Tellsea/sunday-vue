@@ -139,11 +139,6 @@
         },
         // 表格数据
         tableData: [],
-        // 表格分页
-        treeProps: {
-          children: 'children',
-          label: 'name'
-        },
         // 表单
         dataForm: {
           id: 0,
@@ -179,6 +174,7 @@
       // 重置
       handleReset() {
         this.$refs['searchForm'].resetFields()
+        this.loadTable()
       },
       // 关闭对话框
       closeDialog() {

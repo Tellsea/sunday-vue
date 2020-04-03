@@ -3,9 +3,9 @@ package cn.tellsea.sunday.system.controller;
 import cn.tellsea.sunday.common.authentication.JwtUtil;
 import cn.tellsea.sunday.common.entity.ResponseResult;
 import cn.tellsea.sunday.common.exception.BaseException;
-import cn.tellsea.sunday.common.properties.FreestyleProperties;
-import cn.tellsea.sunday.common.utils.IpUtil;
-import cn.tellsea.sunday.common.utils.RedisUtil;
+import cn.tellsea.sunday.common.properties.SystemProperties;
+import cn.tellsea.sunday.common.util.IpUtils;
+import cn.tellsea.sunday.common.util.RedisUtils;
 import cn.tellsea.sunday.system.entity.ResourceInfo;
 import cn.tellsea.sunday.system.entity.RoleInfo;
 import cn.tellsea.sunday.system.entity.UserInfo;
@@ -48,9 +48,9 @@ public class LoginController {
     @Autowired
     private ResourceInfoService resourceInfoService;
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtils;
     @Autowired
-    private FreestyleProperties properties;
+    private SystemProperties properties;
 
     @ApiOperation("登录")
     @PostMapping("login")
@@ -65,7 +65,7 @@ public class LoginController {
             return ResponseResult.errorMsg("密码错误");
         } else {
             String token = JwtUtil.sign(username, password);
-            String ip = IpUtil.getClientIp(request);
+            String ip = IpUtils.getClientIp(request);
             //redisUtil.set(FreestyleConst.TOKEN_PREFIX + token + StringPool.DOT + ip, userInfo, properties.getShiro().getJwtTokenTimeOut());
             // 返回前端所需数据
 //            Map<String, Object> map = new HashMap<>(16);
@@ -77,7 +77,7 @@ public class LoginController {
             userInfo.setRoles(roleInfoService.getByUserName(username).stream().map(RoleInfo::getName).collect(Collectors.toSet()));
             userInfo.setPermissions(resourceInfoService.getByUserName(username).stream().map(ResourceInfo::getPerms).collect(Collectors.toSet()));
             userInfo.setMenus(resourceInfoService.getByUserName(username));
-            redisUtil.set(token, userInfo, properties.getShiro().getJwtTokenTimeOut());
+            redisUtils.set(token, userInfo, properties.getShiro().getJwtTokenTimeOut());
             return ResponseResult.success(token);
         }
     }
@@ -86,7 +86,7 @@ public class LoginController {
     @GetMapping("getUserInfo")
     public ResponseResult getUserInfo(@NotNull(message = "token不能为空") @RequestParam("token") String token) {
         // 能进入这里，说明token有效，根据token查询用户信息
-        UserInfo userInfo = (UserInfo) redisUtil.get(token);
+        UserInfo userInfo = (UserInfo) redisUtils.get(token);
         if (userInfo == null) {
             throw new AuthenticationException(" 查询不到用户信息");
         }

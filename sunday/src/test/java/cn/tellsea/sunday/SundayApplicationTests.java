@@ -126,9 +126,10 @@ class SundayApplicationTests {
 
     @Test
     public void queryTree() {
-        List<ResourceInfo> list = resourceInfoMapper.selectList(Wrappers.<ResourceInfo>lambdaQuery().like(ResourceInfo::getName, "新增"));
-        List<ResourceInfo> tree = createTree(0, list);
-        System.out.println(JSON.toJSON(tree));
+        List<ResourceInfo> list = resourceInfoMapper.selectList(Wrappers.<ResourceInfo>lambdaQuery()
+                .like(ResourceInfo::getName, "新增")
+                .orderByAsc(ResourceInfo::getSort));
+        System.out.println(JSON.toJSON(list));
     }
 
     private List<ResourceInfo> createTree(Integer pid, List<ResourceInfo> rootList) {

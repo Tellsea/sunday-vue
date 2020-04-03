@@ -1,8 +1,8 @@
 package cn.tellsea.sunday.common.aspect;
 
 import cn.tellsea.sunday.common.annotation.ControllerLog;
-import cn.tellsea.sunday.common.utils.AddressUtil;
-import cn.tellsea.sunday.common.utils.IpUtil;
+import cn.tellsea.sunday.common.util.AddressUtils;
+import cn.tellsea.sunday.common.util.IpUtils;
 import cn.tellsea.sunday.system.entity.SystemLog;
 import cn.tellsea.sunday.system.service.SystemLogService;
 import com.alibaba.fastjson.JSON;
@@ -70,8 +70,8 @@ public class ControllerLogAspect {
             systemLog.setTime((int) totalTime);
             systemLog.setMethod(methodName);
             systemLog.setParams(JSON.toJSONString(getFieldsName(joinPoint)));
-            systemLog.setIp(IpUtil.getClientIp(request));
-            systemLog.setLocation(AddressUtil.getAddress(systemLog.getIp()));
+            systemLog.setIp(IpUtils.getClientIp(request));
+            systemLog.setLocation(AddressUtils.getAddress(systemLog.getIp()));
             String header = request.getHeader("User-Agent");
             UserAgent userAgent = UserAgent.parseUserAgentString(header);
             Browser browser = userAgent.getBrowser();

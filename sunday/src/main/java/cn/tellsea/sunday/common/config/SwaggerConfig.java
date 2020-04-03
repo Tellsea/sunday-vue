@@ -1,6 +1,6 @@
 package cn.tellsea.sunday.common.config;
 
-import cn.tellsea.sunday.common.properties.FreestyleProperties;
+import cn.tellsea.sunday.common.properties.SystemProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ import java.util.List;
 public class SwaggerConfig {
 
     @Autowired
-    private FreestyleProperties properties;
+    private SystemProperties properties;
 
     @Bean
     public Docket systemApi() {

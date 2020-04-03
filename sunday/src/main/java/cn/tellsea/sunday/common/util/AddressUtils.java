@@ -1,4 +1,4 @@
-package cn.tellsea.sunday.common.utils;
+package cn.tellsea.sunday.common.util;
 
 import org.apache.commons.io.FileUtils;
 import org.lionsoul.ip2region.*;
@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * @date 2019/7/13
  * 使用开源的ip2region库，开源地址：https://github.com/lionsoul2014/ip2region
  */
-public class AddressUtil {
+public class AddressUtils {
 
     /**
      * 代码参考官方：https://github.com/lionsoul2014/ip2region/blob/master/binding/java/src/main/java/org/lionsoul/ip2region/test/TestSearcher.java
@@ -27,7 +27,7 @@ public class AddressUtil {
      */
     public static String getAddress(String ip) {
         //db
-        String dbPath = AddressUtil.class.getResource("/config/ip2region.db").getPath();
+        String dbPath = AddressUtils.class.getResource("/config/ip2region.db").getPath();
 
         File file = new File(dbPath);
 
@@ -36,7 +36,7 @@ public class AddressUtil {
             dbPath = tmpDir + "ip.db";
             file = new File(dbPath);
             try {
-                FileUtils.copyInputStreamToFile(AddressUtil.class.getClassLoader().getResourceAsStream("classpath:config/ip2region.db"), file);
+                FileUtils.copyInputStreamToFile(AddressUtils.class.getClassLoader().getResourceAsStream("classpath:config/ip2region.db"), file);
             } catch (IOException e) {
                 e.printStackTrace();
             }

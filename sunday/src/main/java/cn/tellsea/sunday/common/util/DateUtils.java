@@ -1,4 +1,4 @@
-package cn.tellsea.sunday.common.utils;
+package cn.tellsea.sunday.common.util;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.util.Date;
  * @author: Tellsea
  * @date : 2020/3/6
  */
-public class DateUtil {
+public class DateUtils {
 
     public static final String FULL_TIME_PATTERN = "yyyyMMddHHmmss";
 

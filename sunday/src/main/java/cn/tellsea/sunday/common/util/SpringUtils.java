@@ -1,4 +1,4 @@
-package cn.tellsea.sunday.common.utils;
+package cn.tellsea.sunday.common.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -13,16 +13,16 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class SpringUtil implements ApplicationContextAware {
+public class SpringUtils implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
-        if (SpringUtil.applicationContext == null) {
-            SpringUtil.applicationContext = applicationContext;
+        if (SpringUtils.applicationContext == null) {
+            SpringUtils.applicationContext = applicationContext;
         }
-        log.info("SpringUtil: {}", SpringUtil.applicationContext);
+        log.info("SpringUtil: {}", SpringUtils.applicationContext);
     }
 
     /**

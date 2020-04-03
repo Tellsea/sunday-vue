@@ -29,7 +29,7 @@ public class ResourceInfoServiceImpl extends ServiceImpl<ResourceInfoMapper, Res
     @Override
     public List<ResourceInfo> listByTree(ResourceInfo resourceInfo) {
         if (StringUtils.isNotEmpty(resourceInfo.getName())) {
-            return this.baseMapper.selectList(Wrappers.<ResourceInfo>lambdaQuery()
+            return this.baseMapper.selectList(new LambdaQueryWrapper<ResourceInfo>()
                     .like(ResourceInfo::getName, resourceInfo.getName())
                     .orderByAsc(ResourceInfo::getSort));
         }

@@ -1,4 +1,4 @@
-package cn.tellsea.sunday.common.utils;
+package cn.tellsea.sunday.common.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @date : 2020/3/4
  */
 @Component
-public final class RedisUtil {
+public final class RedisUtils {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;

@@ -1,7 +1,7 @@
 package cn.tellsea.sunday.common.authentication;
 
-import cn.tellsea.sunday.common.properties.FreestyleProperties;
-import cn.tellsea.sunday.common.utils.RedisUtil;
+import cn.tellsea.sunday.common.properties.SystemProperties;
+import cn.tellsea.sunday.common.util.RedisUtils;
 import cn.tellsea.sunday.system.entity.ResourceInfo;
 import cn.tellsea.sunday.system.entity.RoleInfo;
 import cn.tellsea.sunday.system.entity.UserInfo;
@@ -38,9 +38,9 @@ public class ShiroRealm extends AuthorizingRealm {
     @Autowired
     private ResourceInfoService resourceInfoService;
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtils;
     @Autowired
-    private FreestyleProperties properties;
+    private SystemProperties properties;
 
     /**
      * 大坑！，必须重写此方法，不然Shiro会报错
@@ -85,12 +85,12 @@ public class ShiroRealm extends AuthorizingRealm {
         if (StringUtils.isEmpty(userName)) {
             throw new AuthenticationException("令牌无效");
         }
-        UserInfo userBean = (UserInfo) redisUtil.get(token);
+        UserInfo userBean = (UserInfo) redisUtils.get(token);
         if (userBean == null) {
             throw new AuthenticationException("令牌已过期");
         } else {
             // 延长token一小时
-            redisUtil.expire(token, properties.getShiro().getJwtTokenTimeOut());
+            redisUtils.expire(token, properties.getShiro().getJwtTokenTimeOut());
             return new SimpleAuthenticationInfo(token, token, "ShiroRealm");
         }
     }

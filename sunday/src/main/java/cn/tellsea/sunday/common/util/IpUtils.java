@@ -1,4 +1,4 @@
-package cn.tellsea.sunday.common.utils;
+package cn.tellsea.sunday.common.util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * @author: Tellsea
  * @date : 2020/3/3
  */
-public class IpUtil {
+public class IpUtils {
 
     /**
      * 检查IP是否合法

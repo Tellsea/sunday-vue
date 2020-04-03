@@ -64,8 +64,9 @@ spring:
 
 # mybatis plus
 mybatis-plus:
-  #  configuration:
-  #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  configuration:
+    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath:mapper/*/*.xml
   type-aliases-package: cn.tellsea.sunday.system.entity
   global-config:
