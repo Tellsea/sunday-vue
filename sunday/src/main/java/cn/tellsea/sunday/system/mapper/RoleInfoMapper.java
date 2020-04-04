@@ -16,7 +16,7 @@ public interface RoleInfoMapper extends BaseMapper<RoleInfo> {
 
     List<RoleInfo> getByUserName(String userName);
 
-    int countByTable(@Param("entity") RoleInfo roleInfo);
+    int countRoleInfoByTable(@Param("entity") RoleInfo roleInfo);
 
-    List<RoleInfo> listByTable(@Param("entity")RoleInfo roleInfo);
+    List<RoleInfo> listRoleInfoByTable(@Param("entity")RoleInfo roleInfo);
 }

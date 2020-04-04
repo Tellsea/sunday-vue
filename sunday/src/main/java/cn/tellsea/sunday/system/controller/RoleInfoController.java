@@ -1,7 +1,9 @@
 package cn.tellsea.sunday.system.controller;
 
 import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.enums.CrudEnums;
 import cn.tellsea.sunday.common.enums.StatusEnums;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.RoleInfo;
 import cn.tellsea.sunday.system.service.RoleInfoService;
 import io.swagger.annotations.Api;
@@ -29,7 +31,7 @@ public class RoleInfoController {
     @ApiOperation("数据表格")
     @PostMapping("listByTable")
     public ResponseResult listByTable(RoleInfo roleInfo) {
-        return roleInfoService.listByTable(roleInfo);
+        return ResponseResult.table(roleInfoService.listRoleInfoByTable(roleInfo));
     }
 
     @ApiOperation("所有角色")
@@ -40,22 +42,19 @@ public class RoleInfoController {
 
     @ApiOperation("新增角色")
     @PostMapping("save")
-    public ResponseResult save(RoleInfo roleInfo) {
-        roleInfoService.saveRole(roleInfo);
-        return ResponseResult.success(StatusEnums.SAVE_SUCCESS);
+    public ResponseResult save(RoleInfo roleInfo) throws CrudException {
+        return ResponseResult.verify(CrudEnums.SAVE, roleInfoService.saveRole(roleInfo));
     }
 
     @ApiOperation("更新角色")
     @PostMapping("update")
-    public ResponseResult update(RoleInfo roleInfo) {
-        roleInfoService.updateRole(roleInfo);
-        return ResponseResult.success(StatusEnums.UPDATE_SUCCESS);
+    public ResponseResult update(RoleInfo roleInfo) throws CrudException {
+        return ResponseResult.verify(CrudEnums.UPDATE, roleInfoService.updateRole(roleInfo));
     }
 
     @ApiOperation("删除角色")
     @PostMapping("deleteById")
-    public ResponseResult deleteById(int id) {
-        roleInfoService.deleteRole(id);
-        return ResponseResult.success(StatusEnums.DELETE_SUCCESS);
+    public ResponseResult deleteById(int id) throws CrudException {
+        return ResponseResult.verify(CrudEnums.DELETE, roleInfoService.deleteRoleById(id));
     }
 }

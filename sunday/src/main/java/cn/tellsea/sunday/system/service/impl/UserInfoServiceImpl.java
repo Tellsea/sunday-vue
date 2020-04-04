@@ -1,6 +1,8 @@
 package cn.tellsea.sunday.system.service.impl;
 
-import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.entity.TableData;
+import cn.tellsea.sunday.common.enums.StatusEnums;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.MapUserRole;
 import cn.tellsea.sunday.system.entity.UserInfo;
 import cn.tellsea.sunday.system.mapper.UserInfoMapper;
@@ -38,26 +40,34 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     }
 
     @Override
-    public ResponseResult listByTable(UserInfo userInfo) {
-        int count = this.baseMapper.countByTable(userInfo);
+    public TableData listUserInfoByTable(UserInfo userInfo) {
+        int count = this.baseMapper.countUserInfoByTable(userInfo);
         List<UserInfo> list = new ArrayList<>();
         if (count > 0) {
-            list = this.baseMapper.listByTable(userInfo);
+            list = this.baseMapper.listUserInfoByTable(userInfo);
         }
-        return ResponseResult.table(count, list);
+        return new TableData(count, list);
     }
 
     @Override
-    public void saveUserInfo(UserInfo userInfo) {
-        this.baseMapper.insert(userInfo);
+    public int saveUserInfo(UserInfo userInfo) throws CrudException {
+        int count = this.baseMapper.insert(userInfo);
+        if (count == 0) {
+            throw new CrudException(StatusEnums.SAVE_ERROR.getInfo());
+        }
         saveMapUserRole(userInfo);
+        return count;
     }
 
     @Override
-    public void updateUserInfo(UserInfo userInfo) {
-        this.updateById(userInfo);
+    public int updateUserInfo(UserInfo userInfo) throws CrudException {
+        int count = this.baseMapper.updateById(userInfo);
+        if (count != 1) {
+            throw new CrudException(StatusEnums.UPDATE_ERROR.getInfo());
+        }
         mapUserRoleService.remove(new LambdaUpdateWrapper<MapUserRole>().eq(MapUserRole::getUserId, userInfo.getId()));
         saveMapUserRole(userInfo);
+        return count;
     }
 
     private void saveMapUserRole(UserInfo userInfo) {
@@ -70,7 +80,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     }
 
     @Override
-    public void updateStatus(UserInfo userInfo) {
-        this.baseMapper.updateById(userInfo);
+    public int updateStatus(UserInfo userInfo) throws CrudException {
+        int count = this.baseMapper.updateById(userInfo);
+        if (count == 0) {
+            throw new CrudException(StatusEnums.DELETE_ERROR.getInfo());
+        }
+        return count;
     }
 }

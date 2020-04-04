@@ -3,6 +3,7 @@ package cn.tellsea.sunday.common.handler;
 import cn.tellsea.sunday.common.entity.ResponseResult;
 import cn.tellsea.sunday.common.enums.StatusEnums;
 import cn.tellsea.sunday.common.exception.BaseException;
+import cn.tellsea.sunday.common.exception.CrudException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -46,8 +47,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = BaseException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseResult handleFreestyleException(BaseException e) {
-        log.error("FreestyleException：{}", e.getMessage());
+    public ResponseResult handleBaseException(BaseException e) {
+        log.error("BaseException：{}", e.getMessage());
+        return ResponseResult.errorMsg(e.getMessage());
+    }
+
+    @ExceptionHandler(value = CrudException.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseResult handleCrudException(CrudException e) {
+        log.error("CrudException：{}", e.getMessage() + "：影响数据库行数为0");
         return ResponseResult.errorMsg(e.getMessage());
     }
 

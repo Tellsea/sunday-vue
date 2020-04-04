@@ -1,4 +1,4 @@
-package cn.tellsea.sunday.common.entity;
+package cn.tellsea.sunday.common.consts;
 
 /**
  * 系统常量

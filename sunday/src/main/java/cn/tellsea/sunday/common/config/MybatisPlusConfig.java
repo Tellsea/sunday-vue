@@ -15,11 +15,6 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan("cn.tellsea.sunday.*.mapper")
 public class MybatisPlusConfig {
 
-    /**
-     * 分页插件，自动识别数据库类型，多租户
-     *
-     * @return
-     */
     @Bean
     public PaginationInterceptor paginationInterceptor() {
         return new PaginationInterceptor();

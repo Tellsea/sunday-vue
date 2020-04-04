@@ -2,10 +2,7 @@ package cn.tellsea.sunday.system.entity;
 
 import cn.tellsea.sunday.common.entity.BaseEntity;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -72,6 +69,12 @@ public class LoginLog extends BaseEntity {
      */
     @TableField("message")
     private String message;
+
+    /**
+     * 状态(1正常，2删除)
+     */
+    @TableField(value = "status", fill = FieldFill.INSERT)
+    private Integer status;
 
     @TableField(exist = false)
     private String userName;

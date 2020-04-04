@@ -85,8 +85,7 @@ public class SystemLog extends BaseEntity {
     /**
      * 状态(1正常，2删除)
      */
-    @TableField("status")
-    @TableLogic
+    @TableField(value = "status", fill = FieldFill.INSERT)
     private Integer status;
 
     @TableField(exist = false)

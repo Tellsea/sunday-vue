@@ -1,6 +1,6 @@
 package cn.tellsea.sunday.system.service.impl;
 
-import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.entity.TableData;
 import cn.tellsea.sunday.system.entity.SystemLog;
 import cn.tellsea.sunday.system.mapper.SystemLogMapper;
 import cn.tellsea.sunday.system.service.SystemLogService;
@@ -21,18 +21,18 @@ import java.util.List;
 public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog> implements SystemLogService {
 
     @Override
-    public ResponseResult listByTable(SystemLog systemLog) {
-        int count = this.baseMapper.countByTable(systemLog);
+    public TableData listSystemLogByTable(SystemLog systemLog) {
+        int count = this.baseMapper.countSystemLogByTable(systemLog);
         List<SystemLog> list = new ArrayList<>();
         if (count > 0) {
-            list = this.baseMapper.listByTable(systemLog);
+            list = this.baseMapper.listSystemLogByTable(systemLog);
         }
-        return ResponseResult.table(count, list);
+        return new TableData(count, list);
     }
 
     @Override
-    public void deleteSystemLogByIds(String ids) {
+    public int deleteSystemLogByIds(String ids) {
         List<String> list = Arrays.asList(ids.split(","));
-        this.baseMapper.deleteBatchIds(list);
+        return this.baseMapper.deleteBatchIds(list);
     }
 }

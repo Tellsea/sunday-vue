@@ -1,7 +1,9 @@
 package cn.tellsea.sunday.system.controller;
 
 import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.enums.CrudEnums;
 import cn.tellsea.sunday.common.enums.StatusEnums;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.SystemLog;
 import cn.tellsea.sunday.system.service.SystemLogService;
 import io.swagger.annotations.Api;
@@ -28,13 +30,12 @@ public class SystemLogController {
     @ApiOperation("表格数据")
     @PostMapping("listByTable")
     public ResponseResult listByTable(SystemLog systemLog) {
-        return systemLogService.listByTable(systemLog);
+        return ResponseResult.table(systemLogService.listSystemLogByTable(systemLog));
     }
 
     @ApiOperation("根据ids删除")
     @PostMapping("deleteByIds")
-    public ResponseResult deleteByIds(String ids) {
-        systemLogService.deleteSystemLogByIds(ids);
-        return ResponseResult.success(StatusEnums.DELETE_SUCCESS);
+    public ResponseResult deleteByIds(String ids) throws CrudException {
+        return ResponseResult.verify(CrudEnums.DELETE, systemLogService.deleteSystemLogByIds(ids));
     }
 }

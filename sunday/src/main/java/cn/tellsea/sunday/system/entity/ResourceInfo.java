@@ -1,11 +1,10 @@
 package cn.tellsea.sunday.system.entity;
 
 import cn.tellsea.sunday.common.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
@@ -77,6 +76,25 @@ public class ResourceInfo extends BaseEntity {
      */
     @TableField("sort")
     private Integer sort;
+
+    /**
+     * 创建人
+     */
+    @TableField("create_user")
+    private Integer createUser;
+
+    /**
+     * 创建时间
+     */
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    /**
+     * 状态(1正常，2删除)
+     */
+    @TableField(value = "status", fill = FieldFill.INSERT)
+    private Integer status;
 
     @TableField(exist = false)
     private List<ResourceInfo> children;

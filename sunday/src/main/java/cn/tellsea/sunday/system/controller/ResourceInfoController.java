@@ -1,7 +1,9 @@
 package cn.tellsea.sunday.system.controller;
 
 import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.enums.CrudEnums;
 import cn.tellsea.sunday.common.enums.StatusEnums;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.ResourceInfo;
 import cn.tellsea.sunday.system.service.ResourceInfoService;
 import io.swagger.annotations.Api;
@@ -13,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 资源表 控制器
+ * 菜单表 控制器
  *
  * @author Tellsea
  * @date 2020-03-04
  */
-@Api(tags = "资源表接口")
+@Api(tags = "菜单表接口")
 @RestController
 @RequestMapping("/system/resourceInfo")
 public class ResourceInfoController {
@@ -26,30 +28,27 @@ public class ResourceInfoController {
     @Autowired
     private ResourceInfoService resourceInfoService;
 
-    @ApiOperation("资源树")
+    @ApiOperation("菜单树")
     @PostMapping("listByTree")
     public ResponseResult listByTree(ResourceInfo resourceInfo) {
-        return ResponseResult.success(resourceInfoService.listByTree(resourceInfo));
+        return ResponseResult.success(resourceInfoService.listResourceInfoByTree(resourceInfo));
     }
 
-    @ApiOperation("新增资源")
+    @ApiOperation("新增菜单")
     @PostMapping("save")
-    public ResponseResult save(ResourceInfo resourceInfo) {
-        resourceInfoService.getBaseMapper().insert(resourceInfo);
-        return ResponseResult.success(StatusEnums.SAVE_SUCCESS);
+    public ResponseResult save(ResourceInfo resourceInfo) throws CrudException {
+        return ResponseResult.verify(CrudEnums.SAVE, resourceInfoService.saveResourceInfo(resourceInfo));
     }
 
-    @ApiOperation("更新资源")
+    @ApiOperation("更新菜单")
     @PostMapping("update")
-    public ResponseResult update(ResourceInfo resourceInfo) {
-        resourceInfoService.getBaseMapper().updateById(resourceInfo);
-        return ResponseResult.success(StatusEnums.UPDATE_SUCCESS);
+    public ResponseResult update(ResourceInfo resourceInfo) throws CrudException {
+        return ResponseResult.verify(CrudEnums.UPDATE, resourceInfoService.updateResourceInfo(resourceInfo));
     }
 
-    @ApiOperation("删除资源")
+    @ApiOperation("删除菜单")
     @PostMapping("deleteById")
-    public ResponseResult deleteById(int id) {
-        resourceInfoService.getBaseMapper().deleteById(id);
-        return ResponseResult.success(StatusEnums.DELETE_SUCCESS);
+    public ResponseResult deleteById(int id) throws CrudException {
+        return ResponseResult.verify(CrudEnums.DELETE, resourceInfoService.deleteResourceInfoById(id));
     }
 }

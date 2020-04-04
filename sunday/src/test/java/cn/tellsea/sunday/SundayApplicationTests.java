@@ -1,9 +1,14 @@
 package cn.tellsea.sunday;
 
+import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.exception.BaseException;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.ResourceInfo;
 import cn.tellsea.sunday.system.entity.Student;
+import cn.tellsea.sunday.system.mapper.LoginLogMapper;
 import cn.tellsea.sunday.system.mapper.ResourceInfoMapper;
 import cn.tellsea.sunday.system.mapper.UserInfoMapper;
+import cn.tellsea.sunday.system.service.LoginLogService;
 import cn.tellsea.sunday.system.service.ResourceInfoService;
 import cn.tellsea.sunday.system.service.StudentService;
 import com.alibaba.fastjson.JSON;
@@ -32,6 +37,8 @@ class SundayApplicationTests {
     private ResourceInfoService resourceInfoService;
     @Autowired
     private ResourceInfoMapper resourceInfoMapper;
+    @Autowired
+    private LoginLogService loginLogService;
 
     @Test
     void contextLoads() {
@@ -110,35 +117,5 @@ class SundayApplicationTests {
         List<ResourceInfo> list = resourceInfoService.list();
         List<String> resString = list.stream().map(ResourceInfo::getPerms).distinct().collect(Collectors.toList());
         resString.forEach(System.out::println);
-    }
-
-    @Test
-    public void json() {
-        // 结论，会丢失json
-        String jsonString = JSON.toJSONString(
-                new ResourceInfo()
-                        .setName("tellsea")
-                        .setChildren(Arrays.asList(
-                                new ResourceInfo().setName("tom"),
-                                new ResourceInfo().setName("susan"))));
-        System.out.println(jsonString);
-    }
-
-    @Test
-    public void queryTree() {
-        List<ResourceInfo> list = resourceInfoMapper.selectList(Wrappers.<ResourceInfo>lambdaQuery()
-                .like(ResourceInfo::getName, "新增")
-                .orderByAsc(ResourceInfo::getSort));
-        System.out.println(JSON.toJSON(list));
-    }
-
-    private List<ResourceInfo> createTree(Integer pid, List<ResourceInfo> rootList) {
-        List<ResourceInfo> treeList = new ArrayList<>();
-        rootList.forEach(info -> {
-            if (pid.equals(info.getPid())) {
-                treeList.add(info.setChildren(createTree(info.getId(), rootList)));
-            }
-        });
-        return treeList;
     }
 }

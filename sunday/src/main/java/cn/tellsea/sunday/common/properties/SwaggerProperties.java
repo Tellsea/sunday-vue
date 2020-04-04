@@ -12,6 +12,10 @@ import lombok.Data;
 public class SwaggerProperties {
 
     /**
+     * 标题
+     */
+    private String title;
+    /**
      * 是否启用swagger
      */
     private boolean enabled;
@@ -39,4 +43,8 @@ public class SwaggerProperties {
      * 服务条款路径
      */
     private String termsOfServiceUrl;
+    /**
+     * 扫描控制层路径，多个用 , 隔开
+     */
+    private String controllerUrl;
 }

@@ -14,9 +14,9 @@ import java.util.List;
  */
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
 
-    int countByTable(@Param("entity") UserInfo userInfo);
+    int countUserInfoByTable(@Param("entity") UserInfo userInfo);
 
-    List<UserInfo> listByTable(@Param("entity")UserInfo userInfo);
+    List<UserInfo> listUserInfoByTable(@Param("entity")UserInfo userInfo);
 
     UserInfo getUserInfoById(int id);
 }

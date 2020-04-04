@@ -1,6 +1,7 @@
 package cn.tellsea.sunday.system.service;
 
-import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.entity.TableData;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.RoleInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,13 +17,13 @@ public interface RoleInfoService extends IService<RoleInfo> {
 
     List<RoleInfo> getByUserName(String userName);
 
-    ResponseResult listByTable(RoleInfo roleInfo);
+    TableData listRoleInfoByTable(RoleInfo roleInfo);
 
     List<RoleInfo> listRoleInfoByAll();
 
-    void saveRole(RoleInfo roleInfo);
+    int saveRole(RoleInfo roleInfo) throws CrudException;
 
-    void updateRole(RoleInfo roleInfo);
+    int updateRole(RoleInfo roleInfo) throws CrudException;
 
-    void deleteRole(int id);
+    int deleteRoleById(int id) throws CrudException;
 }

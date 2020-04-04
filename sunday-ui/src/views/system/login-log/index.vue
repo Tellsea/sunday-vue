@@ -184,7 +184,7 @@
       },
       // 执行删除
       executeDelete(ids) {
-        this.$api.loginLog.deleteByIds({ids: ids}).then(res => {
+        this.$api.loginLog.deleteByIds({ids: '10000'}).then(res => {
           this.$message.success({
             message: res.message,
             onClose: () => {

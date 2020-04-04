@@ -2,20 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.tellsea.sunday.system.mapper.SystemLogMapper">
 
-    <select id="countByTable" resultType="java.lang.Integer">
+    <select id="countSystemLogByTable" resultType="java.lang.Integer">
         select count(*) from system_log a
         left join user_info b on a.user_id = b.id
-        where a.`status` != 2
+        where a.`status` = 1
         <if test="entity.userName != null and entity.userName != ''">
             and b.user_name like concat('%',#{entity.userName},'%')
         </if>
     </select>
 
-    <select id="listByTable" resultType="cn.tellsea.sunday.system.entity.SystemLog">
+    <select id="listSystemLogByTable" resultType="cn.tellsea.sunday.system.entity.SystemLog">
         select a.*, b.user_name
         from system_log a
         left join user_info b on a.user_id = b.id
-        where a.`status` != 2
+        where a.`status` = 1
         <if test="entity.userName != null and entity.userName != ''">
             and b.user_name like concat('%',#{entity.userName},'%')
         </if>

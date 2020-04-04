@@ -1,6 +1,7 @@
 package cn.tellsea.sunday.system.service;
 
-import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.entity.TableData;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,12 +17,12 @@ public interface UserInfoService extends IService<UserInfo> {
 
     UserInfo getUserInfoById(int id);
 
-    ResponseResult listByTable(UserInfo userInfo);
+    TableData listUserInfoByTable(UserInfo userInfo);
 
-    void saveUserInfo(UserInfo userInfo);
+    int saveUserInfo(UserInfo userInfo) throws CrudException;
 
-    void updateUserInfo(UserInfo userInfo);
+    int updateUserInfo(UserInfo userInfo) throws CrudException;
 
-    void updateStatus(UserInfo userInfo);
+    int updateStatus(UserInfo userInfo) throws CrudException;
 
 }

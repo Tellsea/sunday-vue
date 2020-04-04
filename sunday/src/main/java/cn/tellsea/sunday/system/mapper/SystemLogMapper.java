@@ -14,8 +14,8 @@ import java.util.List;
  */
 public interface SystemLogMapper extends BaseMapper<SystemLog> {
 
-    int countByTable(@Param("entity")SystemLog systemLog);
+    int countSystemLogByTable(@Param("entity")SystemLog systemLog);
 
-    List<SystemLog> listByTable(@Param("entity")SystemLog systemLog);
+    List<SystemLog> listSystemLogByTable(@Param("entity")SystemLog systemLog);
 
 }

@@ -1,6 +1,6 @@
 package cn.tellsea.sunday.system.service.impl;
 
-import cn.tellsea.sunday.common.entity.SystemConst;
+import cn.tellsea.sunday.common.consts.SystemConst;
 import cn.tellsea.sunday.system.entity.Student;
 import cn.tellsea.sunday.system.mapper.StudentMapper;
 import cn.tellsea.sunday.system.service.StudentService;

@@ -25,7 +25,7 @@
     <!-- 数据表格 -->
     <el-table
       :data="tableData"
-      :highlight-current-row="true"
+      highlight-current-row
       :header-cell-style="{background:'#eef1f6', color:'#606266'}">
       <el-table-column
         label="序号"
@@ -33,21 +33,26 @@
         width="50">
       </el-table-column>
       <el-table-column
-        label="角色" width="100">
+        label="角色">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        label="描述" width="100">
+        label="描述">
         <template slot-scope="scope">
           <p>{{scope.row.description}}</p>
         </template>
       </el-table-column>
       <el-table-column
-        label="权限">
+        prop="sort"
+        sortable
+        label="排序">
+      </el-table-column>
+      <el-table-column
+        label="创建时间" width="140">
         <template slot-scope="scope">
-          <p>{{scope.row.resourceName}}</p>
+          <p>{{scope.row.createTime}}</p>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" fixed="right" width="140">
@@ -87,16 +92,18 @@
         <el-form-item label="描述" prop="description">
           <el-input v-model="dataForm.description" placeholder="请输入"></el-input>
         </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input type="number" v-model="dataForm.sort" placeholder="请输入"></el-input>
+        </el-form-item>
         <el-form-item label="权限" prop="resourceIds">
           <el-tree
             :data="treeData"
             show-checkbox
-            default-expand-all
             node-key="id"
             ref="tree"
             highlight-current
             :props="treeProps"
-            check-strictly>
+            :check-strictly="treeCheckStrictly">
           </el-tree>
         </el-form-item>
       </el-form>
@@ -112,27 +119,35 @@
   export default {
     data() {
       return {
+        // 查询条件
         searchForm: {
           name: '',
           page: 0,
           limit: 10
         },
+        // 表格数据
         tableData: [],
         tableDataCount: 0,
+        // 树配置
         treeProps: {
           children: 'children',
           label: 'name'
         },
         treeData: [],
+        treeCheckStrictly: false,
+        // 弹框
         showDialogTitle: '',
         showDialogVisible: false,
         deleteVisible: false,
+        // 表单数据
         dataForm: {
           id: 0,
           name: '',
+          sort: 0,
           description: '',
           resourceIds: ''
         },
+        // 表单规则
         rules: {
           name: [{required: true, message: '请输入', trigger: 'blur'}],
           resourceIds: [{required: true, message: '请选择权限', trigger: 'blur'}]
@@ -183,16 +198,19 @@
       },
       // 新增按钮
       handleAdd() {
+        this.$nextTick(() => {
+          this.$refs.dataForm.resetFields()
+        });
         this.showDialogTitle = '新增角色'
         this.showDialogVisible = true
+        this.treeCheckStrictly = false
       },
       // 编辑按钮
       handleEdit(row) {
         this.showDialogTitle = '编辑角色'
         this.showDialogVisible = true
-        this.dataForm.id = row.id
-        this.dataForm.name = row.name
-        this.dataForm.description = row.description
+        this.treeCheckStrictly = true
+        this.dataForm.id = row
         if (row.resourceIds) {
           this.setTreeSelect(row.resourceIds.split(','))
         }

@@ -103,16 +103,15 @@ public class UserInfo extends BaseEntity {
     /**
      * 创建时间
      */
-    @TableField("create_time")
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 状态(1正常，2删除)
      */
-    @TableField("status")
-    @TableLogic
-    private int status;
+    @TableField(value = "status", fill = FieldFill.INSERT)
+    private Integer status;
 
     @TableField(exist = false)
     private String roleIds;

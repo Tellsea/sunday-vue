@@ -102,7 +102,7 @@ public class CodeGenerator {
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         strategy.setInclude(scanner("表名"));
-        strategy.setLogicDeleteFieldName("status");
+        // strategy.setLogicDeleteFieldName("status");
         // strategy.setSuperEntityColumns("id");
         strategy.setEntityTableFieldAnnotationEnable(true);
         strategy.setControllerMappingHyphenStyle(false);

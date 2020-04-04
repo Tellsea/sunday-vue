@@ -1,7 +1,9 @@
 package cn.tellsea.sunday.system.controller;
 
 import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.enums.CrudEnums;
 import cn.tellsea.sunday.common.enums.StatusEnums;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.UserInfo;
 import cn.tellsea.sunday.system.service.UserInfoService;
 import io.swagger.annotations.Api;
@@ -28,14 +30,13 @@ public class UserInfoController {
     @ApiOperation("数据表格")
     @PostMapping("listByTable")
     public ResponseResult listByTable(UserInfo userInfo) {
-        return userInfoService.listByTable(userInfo);
+        return ResponseResult.table(userInfoService.listUserInfoByTable(userInfo));
     }
 
     @ApiOperation("新增用户")
     @PostMapping("save")
-    public ResponseResult save(UserInfo userInfo) {
-        userInfoService.saveUserInfo(userInfo);
-        return ResponseResult.success(StatusEnums.SAVE_SUCCESS);
+    public ResponseResult save(UserInfo userInfo) throws CrudException {
+        return ResponseResult.verify(CrudEnums.SAVE, userInfoService.saveUserInfo(userInfo));
     }
 
     @ApiOperation("根据id查询用户")
@@ -46,15 +47,13 @@ public class UserInfoController {
 
     @ApiOperation("更新用户")
     @PostMapping("update")
-    public ResponseResult update(UserInfo userInfo) {
-        userInfoService.updateUserInfo(userInfo);
-        return ResponseResult.success(StatusEnums.UPDATE_SUCCESS);
+    public ResponseResult update(UserInfo userInfo) throws CrudException {
+        return ResponseResult.verify(CrudEnums.UPDATE, userInfoService.updateUserInfo(userInfo));
     }
 
-    @ApiOperation("修改用户状态")
+    @ApiOperation("更新状态")
     @PostMapping("updateStatus")
-    public ResponseResult updateStatus(UserInfo userInfo) {
-        userInfoService.updateStatus(userInfo);
-        return ResponseResult.success(StatusEnums.DELETE_SUCCESS);
+    public ResponseResult updateStatus(UserInfo userInfo) throws CrudException {
+        return ResponseResult.verify(CrudEnums.DELETE, userInfoService.updateStatus(userInfo));
     }
 }

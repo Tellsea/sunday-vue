@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.tellsea.sunday.system.mapper.UserInfoMapper">
 
-    <select id="countByTable" resultType="java.lang.Integer">
+    <select id="countUserInfoByTable" resultType="java.lang.Integer">
         select count(*) from user_info as a
         left join map_user_role b on a.id = b.user_id
         left join role_info c on b.role_id = c.id
@@ -22,7 +22,7 @@
         </if>
     </select>
 
-    <select id="listByTable" resultType="cn.tellsea.sunday.system.entity.UserInfo">
+    <select id="listUserInfoByTable" resultType="cn.tellsea.sunday.system.entity.UserInfo">
         select a.id, a.user_name, a.nick_name, a.`password`, a.avatar, a.phone, a.sex, a.description,
         a.create_user, a.create_time, a.login_times, a.last_login_time, a.`status`,
         group_concat(c.`name`) role_name, d.user_name create_user_name

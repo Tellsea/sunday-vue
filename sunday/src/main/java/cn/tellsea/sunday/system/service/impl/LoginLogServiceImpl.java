@@ -1,9 +1,11 @@
 package cn.tellsea.sunday.system.service.impl;
 
-import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.entity.TableData;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.LoginLog;
 import cn.tellsea.sunday.system.mapper.LoginLogMapper;
 import cn.tellsea.sunday.system.service.LoginLogService;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +23,18 @@ import java.util.List;
 public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> implements LoginLogService {
 
     @Override
-    public ResponseResult listByTable(LoginLog loginLog) {
+    public TableData listLoginLogByTable(LoginLog loginLog) {
         int count = this.baseMapper.countByTable(loginLog);
         List<LoginLog> list = new ArrayList<>();
         if (count > 0) {
             list = this.baseMapper.listByTable(loginLog);
         }
-        return ResponseResult.table(count, list);
+        return new TableData(count, list);
     }
 
     @Override
-    public void deleteLoginLogByIds(String ids) {
-        List<String> list = Arrays.asList(ids.split(","));
-        this.baseMapper.deleteBatchIds(list);
+    public int deleteLoginLogByIds(String ids) {
+        List<String> list = Arrays.asList(ids.split(StringPool.COMMA));
+        return this.baseMapper.deleteBatchIds(list);
     }
 }

@@ -1,6 +1,7 @@
 package cn.tellsea.sunday.system.service;
 
-import cn.tellsea.sunday.common.entity.ResponseResult;
+import cn.tellsea.sunday.common.entity.TableData;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.LoginLog;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,7 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface LoginLogService extends IService<LoginLog> {
 
-    ResponseResult listByTable(LoginLog loginLog);
+    TableData listLoginLogByTable(LoginLog loginLog);
 
-    void deleteLoginLogByIds(String ids);
+    int deleteLoginLogByIds(String ids) throws CrudException;
 }
