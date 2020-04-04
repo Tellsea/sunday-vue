@@ -1,5 +1,6 @@
 package cn.tellsea.sunday.system.controller;
 
+import cn.tellsea.sunday.common.annotation.Log;
 import cn.tellsea.sunday.common.entity.ResponseResult;
 import cn.tellsea.sunday.common.enums.CrudEnums;
 import cn.tellsea.sunday.common.enums.StatusEnums;
@@ -34,18 +35,21 @@ public class ResourceInfoController {
         return ResponseResult.success(resourceInfoService.listResourceInfoByTree(resourceInfo));
     }
 
+    @Log("新增菜单")
     @ApiOperation("新增菜单")
     @PostMapping("save")
     public ResponseResult save(ResourceInfo resourceInfo) throws CrudException {
         return ResponseResult.verify(CrudEnums.SAVE, resourceInfoService.saveResourceInfo(resourceInfo));
     }
 
+    @Log("更新菜单")
     @ApiOperation("更新菜单")
     @PostMapping("update")
     public ResponseResult update(ResourceInfo resourceInfo) throws CrudException {
         return ResponseResult.verify(CrudEnums.UPDATE, resourceInfoService.updateResourceInfo(resourceInfo));
     }
 
+    @Log("删除菜单")
     @ApiOperation("删除菜单")
     @PostMapping("deleteById")
     public ResponseResult deleteById(int id) throws CrudException {

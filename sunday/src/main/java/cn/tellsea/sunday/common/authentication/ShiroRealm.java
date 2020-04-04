@@ -1,6 +1,6 @@
 package cn.tellsea.sunday.common.authentication;
 
-import cn.tellsea.sunday.common.properties.SystemProperties;
+import cn.tellsea.sunday.common.properties.BaseProperties;
 import cn.tellsea.sunday.common.util.RedisUtils;
 import cn.tellsea.sunday.system.entity.ResourceInfo;
 import cn.tellsea.sunday.system.entity.RoleInfo;
@@ -40,7 +40,7 @@ public class ShiroRealm extends AuthorizingRealm {
     @Autowired
     private RedisUtils redisUtils;
     @Autowired
-    private SystemProperties properties;
+    private BaseProperties properties;
 
     /**
      * 大坑！，必须重写此方法，不然Shiro会报错
@@ -91,7 +91,7 @@ public class ShiroRealm extends AuthorizingRealm {
         } else {
             // 延长token一小时
             redisUtils.expire(token, properties.getShiro().getJwtTokenTimeOut());
-            return new SimpleAuthenticationInfo(token, token, "ShiroRealm");
+            return new SimpleAuthenticationInfo(token, token, getName());
         }
     }
 }

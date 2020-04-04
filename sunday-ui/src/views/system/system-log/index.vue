@@ -36,66 +36,67 @@
     <el-table
       ref="table"
       :data="tableData"
-      :highlight-current-row="true"
-      :header-cell-style="{background:'#eef1f6', color:'#606266'}"
-      style="width: 100%">
+      highlight-current-row
+      :header-cell-style="{background:'#eef1f6', color:'#606266'}">
       <el-table-column
         type="selection"
         width="55"
         align="center">
       </el-table-column>
       <el-table-column
-        label="编号"
-        type="index"
-        width="50">
+        label="编号">
+        <template slot-scope="scope">
+          <span>{{scope.row.id}}</span>
+        </template>
       </el-table-column>
       <el-table-column
         label="操作人">
         <template slot-scope="scope">
-          <p>{{scope.row.userName}}</p>
+          <span>{{scope.row.userName}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="操作描述">
         <template slot-scope="scope">
-          <p>{{scope.row.operation}}</p>
+          <span>{{scope.row.operation}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="耗时(毫秒)">
         <template slot-scope="scope">
-          <p>{{scope.row.time}}</p>
+          <span>{{scope.row.time}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="IP">
         <template slot-scope="scope">
-          <p>{{scope.row.ip}}</p>
+          <span>{{scope.row.ip}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="操作方法"
         show-overflow-tooltip>
         <template slot-scope="scope">
-          <p>{{scope.row.method}}</p>
+          <span>{{scope.row.method}}</span>
         </template>
       </el-table-column>
       <el-table-column
-        label="操作参数">
+        label="操作参数"
+        show-overflow-tooltip>
         <template slot-scope="scope">
-          <p>{{scope.row.params}}</p>
+          <span>{{scope.row.params}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="操作时间" width="160">
         <template slot-scope="scope">
-          <p>{{scope.row.createTime}}</p>
+          <span>{{scope.row.createTime}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="操作地点">
         <template slot-scope="scope">
-          <p>{{scope.row.location}}</p>
+          <span>{{scope.row.location}}</span>
         </template>
       </el-table-column>
       <el-table-column fixed="right" width="70" label="操作">
@@ -139,7 +140,6 @@
       // 加载表格数据
       loadTable() {
         this.$api.systemLog.listByTable(this.searchForm).then(res => {
-          console.log(res)
           this.tableData = res.data
           this.tableDataCount = res.count
         })

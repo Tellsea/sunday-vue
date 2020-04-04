@@ -1,5 +1,6 @@
 package cn.tellsea.sunday.system.controller;
 
+import cn.tellsea.sunday.common.annotation.Log;
 import cn.tellsea.sunday.common.entity.ResponseResult;
 import cn.tellsea.sunday.common.enums.CrudEnums;
 import cn.tellsea.sunday.common.enums.StatusEnums;
@@ -33,6 +34,7 @@ public class UserInfoController {
         return ResponseResult.table(userInfoService.listUserInfoByTable(userInfo));
     }
 
+    @Log("新增角色")
     @ApiOperation("新增用户")
     @PostMapping("save")
     public ResponseResult save(UserInfo userInfo) throws CrudException {
@@ -45,12 +47,14 @@ public class UserInfoController {
         return ResponseResult.success(userInfoService.getUserInfoById(id));
     }
 
+    @Log("更新用户")
     @ApiOperation("更新用户")
     @PostMapping("update")
     public ResponseResult update(UserInfo userInfo) throws CrudException {
         return ResponseResult.verify(CrudEnums.UPDATE, userInfoService.updateUserInfo(userInfo));
     }
 
+    @Log("更新状态")
     @ApiOperation("更新状态")
     @PostMapping("updateStatus")
     public ResponseResult updateStatus(UserInfo userInfo) throws CrudException {

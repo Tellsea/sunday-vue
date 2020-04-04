@@ -3,7 +3,7 @@ package cn.tellsea.sunday.system.controller;
 import cn.tellsea.sunday.common.authentication.JwtUtil;
 import cn.tellsea.sunday.common.entity.ResponseResult;
 import cn.tellsea.sunday.common.exception.BaseException;
-import cn.tellsea.sunday.common.properties.SystemProperties;
+import cn.tellsea.sunday.common.properties.BaseProperties;
 import cn.tellsea.sunday.common.util.IpUtils;
 import cn.tellsea.sunday.common.util.RedisUtils;
 import cn.tellsea.sunday.system.entity.ResourceInfo;
@@ -50,7 +50,7 @@ public class LoginController {
     @Autowired
     private RedisUtils redisUtils;
     @Autowired
-    private SystemProperties properties;
+    private BaseProperties properties;
 
     @ApiOperation("登录")
     @PostMapping("login")
@@ -68,14 +68,11 @@ public class LoginController {
             String ip = IpUtils.getClientIp(request);
             //redisUtil.set(FreestyleConst.TOKEN_PREFIX + token + StringPool.DOT + ip, userInfo, properties.getShiro().getJwtTokenTimeOut());
             // 返回前端所需数据
-//            Map<String, Object> map = new HashMap<>(16);
-//            map.put("token", token);
-//            map.put("userInfo", userInfo);
-//            map.put("roleList", roleInfoService.getByUserName(username).stream().map(RoleInfo::getName).collect(Collectors.toSet()));
-//            map.put("permissionList", resourceInfoService.getByUserName(username).stream().map(ResourceInfo::getPerms).collect(Collectors.toSet()));
-//            map.put("routerList", resourceInfoService.getByUserName(username));
+            // 拥有的角色
             userInfo.setRoles(roleInfoService.getByUserName(username).stream().map(RoleInfo::getName).collect(Collectors.toSet()));
+            // 拥有的权限
             userInfo.setPermissions(resourceInfoService.getByUserName(username).stream().map(ResourceInfo::getPerms).collect(Collectors.toSet()));
+            // 生成菜单
             userInfo.setMenus(resourceInfoService.getByUserName(username));
             redisUtils.set(token, userInfo, properties.getShiro().getJwtTokenTimeOut());
             return ResponseResult.success(token);

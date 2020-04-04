@@ -1,6 +1,7 @@
 package cn.tellsea.sunday.system.service.impl;
 
 import cn.tellsea.sunday.common.entity.TableData;
+import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.SystemLog;
 import cn.tellsea.sunday.system.mapper.SystemLogMapper;
 import cn.tellsea.sunday.system.service.SystemLogService;
@@ -34,5 +35,13 @@ public class SystemLogServiceImpl extends ServiceImpl<SystemLogMapper, SystemLog
     public int deleteSystemLogByIds(String ids) {
         List<String> list = Arrays.asList(ids.split(","));
         return this.baseMapper.deleteBatchIds(list);
+    }
+
+    @Override
+    public void saveSystemLog(SystemLog systemLog) throws CrudException {
+        int count = this.baseMapper.insert(systemLog);
+        if (count == 0) {
+            throw new CrudException("系统日志保存错误，未保存到数据库");
+        }
     }
 }

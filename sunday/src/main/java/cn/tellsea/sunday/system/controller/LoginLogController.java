@@ -1,5 +1,6 @@
 package cn.tellsea.sunday.system.controller;
 
+import cn.tellsea.sunday.common.annotation.Log;
 import cn.tellsea.sunday.common.entity.ResponseResult;
 import cn.tellsea.sunday.common.enums.CrudEnums;
 import cn.tellsea.sunday.common.exception.CrudException;
@@ -32,6 +33,7 @@ public class LoginLogController {
         return ResponseResult.table(loginLogService.listLoginLogByTable(loginLog));
     }
 
+    @Log("根据ids删除")
     @ApiOperation("根据ids删除")
     @PostMapping("deleteByIds")
     public ResponseResult deleteByIds(String ids) throws CrudException {

@@ -41,7 +41,7 @@
       <el-table-column
         label="描述">
         <template slot-scope="scope">
-          <p>{{scope.row.description}}</p>
+          <span>{{scope.row.description}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -52,7 +52,7 @@
       <el-table-column
         label="创建时间" width="140">
         <template slot-scope="scope">
-          <p>{{scope.row.createTime}}</p>
+          <span>{{scope.row.createTime}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" fixed="right" width="140">
@@ -210,7 +210,10 @@
         this.showDialogTitle = '编辑角色'
         this.showDialogVisible = true
         this.treeCheckStrictly = true
-        this.dataForm.id = row
+        // this.dataForm = row
+        for (let attr in this.dataForm) {
+          this.dataForm[attr] = row[attr]
+        }
         if (row.resourceIds) {
           this.setTreeSelect(row.resourceIds.split(','))
         }

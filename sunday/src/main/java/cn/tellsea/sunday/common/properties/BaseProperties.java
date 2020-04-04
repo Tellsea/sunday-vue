@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Configuration
 @ConfigurationProperties(prefix = "sunday")
-public class SystemProperties {
+public class BaseProperties {
 
     private SwaggerProperties swagger;
 

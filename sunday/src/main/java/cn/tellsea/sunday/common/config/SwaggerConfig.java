@@ -1,6 +1,6 @@
 package cn.tellsea.sunday.common.config;
 
-import cn.tellsea.sunday.common.properties.SystemProperties;
+import cn.tellsea.sunday.common.properties.BaseProperties;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -34,7 +34,7 @@ import java.util.List;
 public class SwaggerConfig {
 
     @Autowired
-    private SystemProperties properties;
+    private BaseProperties properties;
 
     @Bean
     public Docket systemApi() {

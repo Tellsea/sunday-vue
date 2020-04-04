@@ -1,6 +1,6 @@
 package cn.tellsea.sunday.common.aspect;
 
-import cn.tellsea.sunday.common.annotation.ControllerLog;
+import cn.tellsea.sunday.common.annotation.Log;
 import cn.tellsea.sunday.common.util.AddressUtils;
 import cn.tellsea.sunday.common.util.IpUtils;
 import cn.tellsea.sunday.system.entity.SystemLog;
@@ -10,11 +10,13 @@ import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
@@ -35,19 +37,16 @@ import java.util.Map;
 @Slf4j
 @Aspect
 @Component
-public class ControllerLogAspect {
+public class LogAspect {
 
-    private final SystemLogService systemLogService;
-
-    public ControllerLogAspect(SystemLogService systemLogService) {
-        this.systemLogService = systemLogService;
-    }
+    @Autowired
+    private SystemLogService systemLogService;
 
     @Pointcut("execution(public * cn.tellsea.sunday.*.controller..*(..))")
-    public void controllerLog() {
+    public void log() {
     }
 
-    @Around(value = "controllerLog()")
+    @Around(value = "log()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
@@ -60,13 +59,15 @@ public class ControllerLogAspect {
         String methodName = joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()";
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method targetMethod = methodSignature.getMethod();
-        String value = targetMethod.getName();
-        if (targetMethod.isAnnotationPresent(ControllerLog.class)) {
+        if (targetMethod.isAnnotationPresent(Log.class)) {
+            Log log = targetMethod.getAnnotation(Log.class);
             // 3、入系统日志表
             SystemLog systemLog = new SystemLog();
             // todo 设置用户id
             systemLog.setUserId(0);
-            systemLog.setOperation(value);
+            if (StringUtils.isNotEmpty(log.value())) {
+                systemLog.setOperation(log.value());
+            }
             systemLog.setTime((int) totalTime);
             systemLog.setMethod(methodName);
             systemLog.setParams(JSON.toJSONString(getFieldsName(joinPoint)));
@@ -77,8 +78,7 @@ public class ControllerLogAspect {
             Browser browser = userAgent.getBrowser();
             OperatingSystem operatingSystem = userAgent.getOperatingSystem();
             systemLog.setDevice(browser + " -- " + operatingSystem);
-            systemLogService.save(systemLog);
-            System.out.println("异步");
+            systemLogService.saveSystemLog(systemLog);
         }
         return proceed;
     }

@@ -22,7 +22,7 @@
     <el-table
       :data="tableData"
       row-key="id"
-      :highlight-current-row="true"
+      highlight-current-row
       :header-cell-style="{background:'#eef1f6', color:'#606266'}"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column

@@ -78,7 +78,7 @@ public class SystemLog extends BaseEntity {
     /**
      * 操作时间
      */
-    @TableField("create_time")
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 

@@ -39,7 +39,7 @@
     <el-table
       ref="table"
       :data="tableData"
-      :highlight-current-row="true"
+      highlight-current-row
       :header-cell-style="{background:'#eef1f6', color:'#606266'}">
       <el-table-column
         type="selection"
@@ -49,37 +49,37 @@
       <el-table-column
         label="编号">
         <template slot-scope="scope">
-          <p>{{scope.row.id}}</p>
+          <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="用户名">
         <template slot-scope="scope">
-          <p>{{scope.row.userName}}</p>
+          <span>{{scope.row.userName}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="IP">
         <template slot-scope="scope">
-          <p>{{scope.row.ip}}</p>
+          <span>{{scope.row.ip}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="位置">
         <template slot-scope="scope">
-          <p>{{scope.row.location}}</p>
+          <span>{{scope.row.location}}</span>
         </template>
       </el-table-column>
       <el-table-column
-        label="设备">
+        label="设备" show-overflow-tooltip>
         <template slot-scope="scope">
-          <p>{{scope.row.device}}</p>
+          <span>{{scope.row.device}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="登录时间" width="160">
         <template slot-scope="scope">
-          <p>{{scope.row.createTime}}</p>
+          <span>{{scope.row.createTime}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -96,7 +96,7 @@
       <el-table-column
         label="消息">
         <template slot-scope="scope">
-          <p>{{scope.row.message}}</p>
+          <span>{{scope.row.message}}</span>
         </template>
       </el-table-column>
       <el-table-column fixed="right" width="70" label="操作">

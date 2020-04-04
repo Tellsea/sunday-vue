@@ -39,7 +39,7 @@
     <el-table
       :data="tableData"
       :height="tableHeight"
-      :highlight-current-row="true"
+      highlight-current-row
       :header-cell-style="{background:'#eef1f6', color:'#606266'}">
       <el-table-column
         label="序号"
@@ -55,13 +55,13 @@
       <el-table-column
         label="用户名">
         <template slot-scope="scope">
-          <p>{{scope.row.userName}}</p>
+          <span>{{scope.row.userName}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="昵称">
         <template slot-scope="scope">
-          <p>{{scope.row.nickName}}</p>
+          <span>{{scope.row.nickName}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -73,39 +73,39 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="角色">
+        label="角色" show-overflow-tooltip>
         <template slot-scope="scope">
-          <p>{{scope.row.roleName}}</p>
+          <span>{{scope.row.roleName}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="电话" width="100">
         <template slot-scope="scope">
-          <p>{{scope.row.phone}}</p>
+          <span>{{scope.row.phone}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="登录次数">
         <template slot-scope="scope">
-          <p>{{scope.row.loginTimes}}</p>
+          <span>{{scope.row.loginTimes}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="最近登录时间" width="140">
         <template slot-scope="scope">
-          <p>{{scope.row.lastLoginTime}}</p>
+          <span>{{scope.row.lastLoginTime}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="创建人">
         <template slot-scope="scope">
-          <p>{{scope.row.createUserName}}</p>
+          <span>{{scope.row.createUserName}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="创建时间" width="140">
         <template slot-scope="scope">
-          <p>{{scope.row.createTime}}</p>
+          <span>{{scope.row.createTime}}</span>
         </template>
       </el-table-column>
       <el-table-column

@@ -37,7 +37,7 @@ import Pagination from './components/Pagination'
 Vue.component(Pagination.name, Pagination)
 
 // set ElementUI lang to EN  medium / small / mini
-Vue.use(ElementUI, {size: 'small'})
+Vue.use(ElementUI, {size: 'mini'})
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
