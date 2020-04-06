@@ -1,6 +1,6 @@
 package cn.tellsea.sunday.common.runner;
 
-import cn.tellsea.sunday.common.exception.BaseException;
+import cn.tellsea.sunday.common.exception.RedisConnectionException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ public class RedisRunner implements ApplicationRunner {
     private String redisPassword;
 
     @Override
-    public void run(ApplicationArguments args) throws BaseException {
+    public void run(ApplicationArguments args) throws RedisConnectionException {
         Jedis jedis = new Jedis(redisHost, redisPort);
         try {
             if (StringUtils.isNotEmpty(redisPassword)) {
@@ -38,7 +38,7 @@ public class RedisRunner implements ApplicationRunner {
                 log.info("redis连接成功：ping: {}", ping);
             }
         } catch (Exception e) {
-            throw new BaseException("redis连接失败，请检查redis是否启动");
+            throw new RedisConnectionException("redis连接失败，请检查redis是否启动");
         } finally {
             jedis.close();
         }

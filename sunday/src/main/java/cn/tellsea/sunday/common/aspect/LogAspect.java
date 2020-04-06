@@ -1,6 +1,7 @@
 package cn.tellsea.sunday.common.aspect;
 
 import cn.tellsea.sunday.common.annotation.Log;
+import cn.tellsea.sunday.common.properties.BaseProperties;
 import cn.tellsea.sunday.common.util.AddressUtils;
 import cn.tellsea.sunday.common.util.IpUtils;
 import cn.tellsea.sunday.system.entity.SystemLog;
@@ -41,6 +42,8 @@ public class LogAspect {
 
     @Autowired
     private SystemLogService systemLogService;
+    @Autowired
+    private BaseProperties properties;
 
     @Pointcut("execution(public * cn.tellsea.sunday.*.controller..*(..))")
     public void log() {
@@ -59,7 +62,7 @@ public class LogAspect {
         String methodName = joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()";
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method targetMethod = methodSignature.getMethod();
-        if (targetMethod.isAnnotationPresent(Log.class)) {
+        if (targetMethod.isAnnotationPresent(Log.class) && properties.getAop().isOpenLog()) {
             Log log = targetMethod.getAnnotation(Log.class);
             // 3、入系统日志表
             SystemLog systemLog = new SystemLog();

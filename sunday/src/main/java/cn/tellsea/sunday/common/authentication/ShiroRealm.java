@@ -60,7 +60,7 @@ public class ShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         String token = (String) principal.getPrimaryPrincipal();
-        String userName = JwtUtil.getUsername(token);
+        String userName = JwtUtils.getUsername(token);
         // 设置角色集合
         Set<String> roleSet = roleInfoService.getByUserName(userName).stream().map(RoleInfo::getName).collect(Collectors.toSet());
         info.addRoles(roleSet);
@@ -81,17 +81,16 @@ public class ShiroRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken auth) throws AuthenticationException {
         String token = (String) auth.getCredentials();
         // 解密获得userName您还没有登录呦
-        String userName = JwtUtil.getUsername(token);
+        String userName = JwtUtils.getUsername(token);
         if (StringUtils.isEmpty(userName)) {
             throw new AuthenticationException("令牌无效");
         }
-        UserInfo userBean = (UserInfo) redisUtils.get(token);
-        if (userBean == null) {
+        UserInfo userInfo = (UserInfo) redisUtils.get(token);
+        if (userInfo == null) {
             throw new AuthenticationException("令牌已过期");
-        } else {
-            // 延长token一小时
-            redisUtils.expire(token, properties.getShiro().getJwtTokenTimeOut());
-            return new SimpleAuthenticationInfo(token, token, getName());
         }
+        // 延长token一小时
+        redisUtils.expire(token, properties.getShiro().getJwtTokenTimeOut());
+        return new SimpleAuthenticationInfo(token, token, getName());
     }
 }

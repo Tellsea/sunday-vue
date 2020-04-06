@@ -94,4 +94,6 @@ sunday:
     terms-of-service-url: https://www.apache.org/licenses/LICENSE-2.0.html
     controller-url: cn.tellsea.sunday.system.controller
   shiro:
-    jwtTokenTimeOut: 3600
+    jwt-token-time-out: 3600
+  aop:
+    open-log: true

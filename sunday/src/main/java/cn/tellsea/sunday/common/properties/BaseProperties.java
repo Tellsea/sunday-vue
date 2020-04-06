@@ -20,4 +20,6 @@ public class BaseProperties {
     private SwaggerProperties swagger;
 
     private ShiroProperties shiro;
+
+    private AopProperties aop;
 }

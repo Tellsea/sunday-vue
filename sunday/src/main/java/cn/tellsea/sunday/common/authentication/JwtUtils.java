@@ -14,7 +14,7 @@ import java.util.Date;
  * @author: Tellsea
  * @date : 2020/3/4
  */
-public class JwtUtil {
+public class JwtUtils {
 
     // 过期时间5分钟
     private static final long EXPIRE_TIME = 1000 * 60 * 5;
@@ -62,7 +62,7 @@ public class JwtUtil {
      */
     public static String sign(String username, String password) {
 //        try {
-        Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+        Date date = new Date(System.currentTimeMillis() + 5000);
         Algorithm algorithm = Algorithm.HMAC256(password);
         // 附带username信息
         return JWT.create()
@@ -72,5 +72,14 @@ public class JwtUtil {
 //        } catch (UnsupportedEncodingException e) {
 //            return null;
 //        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        String token = sign("tellsea", "123456");
+        System.out.println("生成token：" + token);
+        Thread.sleep(5000);
+        boolean verify = verify(token, "tellsea", "123456");
+        System.out.println("验证结果：" + verify);
+        System.out.println("读取名字：" + getUsername(token));
     }
 }

@@ -1,9 +1,9 @@
 package cn.tellsea.sunday.system.controller;
 
-import cn.tellsea.sunday.common.authentication.JwtUtil;
+import cn.tellsea.sunday.common.authentication.JwtUtils;
 import cn.tellsea.sunday.common.entity.ResponseResult;
-import cn.tellsea.sunday.common.exception.BaseException;
 import cn.tellsea.sunday.common.properties.BaseProperties;
+import cn.tellsea.sunday.common.service.TokenService;
 import cn.tellsea.sunday.common.util.IpUtils;
 import cn.tellsea.sunday.common.util.RedisUtils;
 import cn.tellsea.sunday.system.entity.ResourceInfo;
@@ -18,14 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.stream.Collectors;
 
@@ -51,6 +50,8 @@ public class LoginController {
     private RedisUtils redisUtils;
     @Autowired
     private BaseProperties properties;
+    @Autowired
+    private TokenService tokenService;
 
     @ApiOperation("登录")
     @PostMapping("login")
@@ -59,61 +60,45 @@ public class LoginController {
                                 HttpServletRequest request) {
         UserInfo userInfo = userInfoService.getByUserName(username);
         if (userInfo == null) {
-            return ResponseResult.errorMsg("用户不存在");
+            throw new AuthenticationException("用户不存在");
         }
         if (!StringUtils.equals(userInfo.getPassword(), password)) {
-            return ResponseResult.errorMsg("密码错误");
-        } else {
-            String token = JwtUtil.sign(username, password);
-            String ip = IpUtils.getClientIp(request);
-            //redisUtil.set(FreestyleConst.TOKEN_PREFIX + token + StringPool.DOT + ip, userInfo, properties.getShiro().getJwtTokenTimeOut());
-            // 返回前端所需数据
-            // 拥有的角色
-            userInfo.setRoles(roleInfoService.getByUserName(username).stream().map(RoleInfo::getName).collect(Collectors.toSet()));
-            // 拥有的权限
-            userInfo.setPermissions(resourceInfoService.getByUserName(username).stream().map(ResourceInfo::getPerms).collect(Collectors.toSet()));
-            // 生成菜单
-            userInfo.setMenus(resourceInfoService.getByUserName(username));
-            redisUtils.set(token, userInfo, properties.getShiro().getJwtTokenTimeOut());
-            return ResponseResult.success(token);
+            throw new AuthenticationException("密码错误");
         }
+        if (userInfo.getStatus() == 2) {
+            throw new AuthenticationException("该用户已经被禁用");
+        }
+        String token = JwtUtils.sign(username, password);
+
+        String ip = IpUtils.getClientIp(request);
+        //redisUtil.set(FreestyleConst.TOKEN_PREFIX + token + StringPool.DOT + ip, userInfo, properties.getShiro().getJwtTokenTimeOut());
+        // 返回前端所需数据
+        // 拥有的角色
+        userInfo.setRoles(roleInfoService.getByUserName(username).stream().map(RoleInfo::getName).collect(Collectors.toSet()));
+        // 拥有的权限
+        userInfo.setPermissions(resourceInfoService.getByUserName(username).stream().map(ResourceInfo::getPerms).collect(Collectors.toSet()));
+        // 生成菜单
+        userInfo.setMenus(resourceInfoService.getByUserName(username));
+        redisUtils.set(token, userInfo, properties.getShiro().getJwtTokenTimeOut());
+        return ResponseResult.success(token);
     }
 
     @ApiOperation("根据token获取用户信息")
     @GetMapping("getUserInfo")
-    public ResponseResult getUserInfo(@NotNull(message = "token不能为空") @RequestParam("token") String token) {
-        // 能进入这里，说明token有效，根据token查询用户信息
-        UserInfo userInfo = (UserInfo) redisUtils.get(token);
-        if (userInfo == null) {
-            throw new AuthenticationException(" 查询不到用户信息");
-        }
-        return ResponseResult.success(userInfo);
+    public ResponseResult getUserInfo(@RequestParam("token") String token) {
+        return ResponseResult.success(tokenService.getUserInfo(token));
     }
 
     @ApiOperation("退出登录")
     @PostMapping("logout")
     public ResponseResult logout() {
-        log.info("退出登录");
-        return ResponseResult.successMsg("退出成功");
-    }
-
-    @GetMapping("admin")
-    @RequiresRoles("admin")
-    public ResponseResult admin() throws BaseException {
-        String token = (String) SecurityUtils.getSubject().getPrincipal();
-        System.out.println(token);
-        try {
-            System.out.println(1 / 0);
-        } catch (Exception e) {
-            throw new BaseException("测试自定义异常");
+        Subject subject = SecurityUtils.getSubject();
+        String token = (String) subject.getPrincipal();
+        if (StringUtils.isNotEmpty(token)) {
+            redisUtils.del(token);
         }
-        return ResponseResult.success();
-    }
-
-    @GetMapping("testValid")
-    public ResponseResult testValid(@Valid UserInfo userInfo) {
-        System.out.println(userInfo);
-        return ResponseResult.success();
+         subject.logout();
+        return ResponseResult.successMsg("退出成功");
     }
 
     @GetMapping("401")
