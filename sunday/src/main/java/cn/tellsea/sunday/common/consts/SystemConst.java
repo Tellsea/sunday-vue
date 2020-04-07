@@ -8,14 +8,9 @@ package cn.tellsea.sunday.common.consts;
  */
 public class SystemConst {
 
-    /**
-     * 主数据源
-     */
     public static final String DB_MASTER = "master";
-    /**
-     * 从数据源
-     */
+
     public static final String DB_SLAVE = "slave";
 
-    public static final String TOKEN_PREFIX = "redis.token.";
+    public static final String TOKEN = "sunday_token";
 }

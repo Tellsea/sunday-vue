@@ -1,6 +1,9 @@
 package cn.tellsea.sunday.common.authentication;
 
+import cn.tellsea.sunday.common.consts.SystemConst;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,7 +24,6 @@ import java.io.IOException;
 @Slf4j
 public class JwtFilter extends BasicHttpAuthenticationFilter {
 
-
     /**
      * 判断用户是否想要登入。
      * 检测header里面是否包含token字段即可
@@ -29,7 +31,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
-        String authorization = req.getHeader("token");
+        String authorization = req.getHeader(SystemConst.TOKEN);
         return authorization != null;
     }
 
@@ -39,7 +41,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String authorization = httpServletRequest.getHeader("token");
+        String authorization = httpServletRequest.getHeader(SystemConst.TOKEN);
         JwtToken token = new JwtToken(authorization);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
         getSubject(request, response).login(token);
@@ -58,11 +60,12 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        // 头部有token，则进行认证
         if (isLoginAttempt(request, response)) {
             try {
                 executeLogin(request, response);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                e.printStackTrace();
                 request.setAttribute("msg", e.getMessage());
                 response401(request, response);
             }

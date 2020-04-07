@@ -9,5 +9,9 @@ import cn.tellsea.sunday.system.entity.UserInfo;
  */
 public interface TokenService {
 
-    UserInfo getUserInfo(String token);
+    UserInfo getActiveUser(String token);
+
+    UserInfo getActiveUser();
+
+    void logout();
 }

@@ -16,9 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -86,25 +84,20 @@ public class LoginController {
     @ApiOperation("根据token获取用户信息")
     @GetMapping("getUserInfo")
     public ResponseResult getUserInfo(@RequestParam("token") String token) {
-        return ResponseResult.success(tokenService.getUserInfo(token));
+        return ResponseResult.success(tokenService.getActiveUser(token));
     }
 
     @ApiOperation("退出登录")
     @PostMapping("logout")
     public ResponseResult logout() {
-        Subject subject = SecurityUtils.getSubject();
-        String token = (String) subject.getPrincipal();
-        if (StringUtils.isNotEmpty(token)) {
-            redisUtils.del(token);
-        }
-         subject.logout();
+        tokenService.logout();
         return ResponseResult.successMsg("退出成功");
     }
 
     @GetMapping("401")
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseResult unauthorized(HttpServletRequest request) {
-        String data = (String) request.getAttribute("msg");
-        return ResponseResult.error(data);
+        String msg = (String) request.getAttribute("msg");
+        return ResponseResult.build(HttpStatus.UNAUTHORIZED.value(), msg);
     }
 }

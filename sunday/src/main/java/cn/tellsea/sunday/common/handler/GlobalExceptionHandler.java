@@ -112,10 +112,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = AuthenticationException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseResult handleAuthenticationException(AuthenticationException e) {
         log.error("AuthenticationException：{}", e.getMessage());
-        return ResponseResult.errorMsg(e.getMessage());
+        return ResponseResult.build(HttpStatus.PRECONDITION_REQUIRED.value(), e.getMessage());
     }
 
     @ExceptionHandler(value = UnauthenticatedException.class)

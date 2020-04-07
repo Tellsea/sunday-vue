@@ -4,7 +4,9 @@ import cn.tellsea.sunday.common.enums.BaseEnums;
 import cn.tellsea.sunday.common.enums.CrudEnums;
 import cn.tellsea.sunday.common.enums.StatusEnums;
 import cn.tellsea.sunday.common.exception.CrudException;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,6 +92,10 @@ public class ResponseResult implements Serializable {
                 .setMessage(StatusEnums.SELECT_SUCCESS.getInfo())
                 .setCount(tableData.getCount())
                 .setData(tableData.getData());
+    }
+
+    public static ResponseResult build(int code, String message) {
+        return new ResponseResult().setCode(code).setMessage(message);
     }
 
     public static ResponseResult verify(CrudEnums crudEnums, int count) throws CrudException {
