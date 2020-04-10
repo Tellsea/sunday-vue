@@ -1,14 +1,16 @@
-package cn.tellsea.sunday.common.authentication;
+package cn.tellsea.sunday.common.authorization;
 
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
- * jwt token
+ * JwtToken
  *
- * @author: Tellsea
- * @date : 2020/3/4
+ * @author Tellsea
+ * @date 2020/4/10
  */
 public class JwtToken implements AuthenticationToken {
+
+    private static final long serialVersionUID = 1900286977895826147L;
 
     private String token;
 
@@ -26,3 +28,4 @@ public class JwtToken implements AuthenticationToken {
         return token;
     }
 }
+

@@ -4,6 +4,7 @@ import cn.tellsea.sunday.common.entity.ResponseResult;
 import cn.tellsea.sunday.common.enums.StatusEnums;
 import cn.tellsea.sunday.common.exception.BaseException;
 import cn.tellsea.sunday.common.exception.CrudException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -58,6 +59,7 @@ public class GlobalExceptionHandler {
         log.error("CrudException：{}", e.getMessage() + "：影响数据库行数为0");
         return ResponseResult.errorMsg(e.getMessage());
     }
+
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

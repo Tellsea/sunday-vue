@@ -1,6 +1,6 @@
 package cn.tellsea.sunday.system.service.impl;
 
-import cn.tellsea.sunday.common.consts.SystemConst;
+import cn.tellsea.sunday.common.consts.DbTypeConst;
 import cn.tellsea.sunday.system.entity.Student;
 import cn.tellsea.sunday.system.mapper.StudentMapper;
 import cn.tellsea.sunday.system.service.StudentService;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @date 2020-03-04
  */
 @Service
-@DS(SystemConst.DB_SLAVE)
+@DS(DbTypeConst.DB_SLAVE)
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
 
 }

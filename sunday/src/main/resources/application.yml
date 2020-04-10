@@ -94,6 +94,11 @@ sunday:
     terms-of-service-url: https://www.apache.org/licenses/LICENSE-2.0.html
     controller-url: cn.tellsea.sunday.system.controller
   shiro:
-    jwt-token-time-out: 3600
+    jwtTokenTimeOut: 3600
+    encryptAESKey: V2FuZzkyNuYSKIuwqTQkFQSUpXVA
+    encryptJWTKey: U0JBUElOENhspJrzkyNjQ1NA
+    accessTokenExpireTime: 10
+    refreshTokenExpireTime: 1800
+    shiroCacheExpireTime: 10
   aop:
-    open-log: true
+    openLog: true

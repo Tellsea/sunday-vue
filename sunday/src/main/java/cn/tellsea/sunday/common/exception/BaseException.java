@@ -6,7 +6,7 @@ package cn.tellsea.sunday.common.exception;
  * @author: Tellsea
  * @date : 2020/3/4
  */
-public class BaseException extends Exception {
+public class BaseException extends RuntimeException {
 
     public BaseException() {
         super();

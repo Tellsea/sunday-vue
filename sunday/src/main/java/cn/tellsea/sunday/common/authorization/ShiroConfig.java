@@ -1,8 +1,8 @@
-package cn.tellsea.sunday.common.authentication;
+package cn.tellsea.sunday.common.authorization;
 
+import cn.tellsea.sunday.common.authorization.cache.CustomCacheManager;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
-import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -17,66 +17,71 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Shiro 配置类
+ * Shiro配置
  *
- * @link https://blog.csdn.net/qq_41595149/article/details/90523783
- * @author: Tellsea
- * @date : 2020/3/4
+ * @author Tellsea
+ * @date 2020/4/10
  */
 @Configuration
 public class ShiroConfig {
 
     @Bean("securityManager")
-    public DefaultWebSecurityManager getManager(ShiroRealm realm) {
+    public DefaultWebSecurityManager getManager(ShiroRealm shiroRealm) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
+        // 使用自定义Realm
+        manager.setRealm(shiroRealm);
+        // 关闭Shiro自带的session
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
         DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
         defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
         subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
         manager.setSubjectDAO(subjectDAO);
-        manager.setRealm(realm);
+        // 设置自定义Cache缓存
+        manager.setCacheManager(new CustomCacheManager());
         return manager;
     }
 
     @Bean("shiroFilter")
     public ShiroFilterFactoryBean factory(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
+        // 添加自己的过滤器取名为jwt
         Map<String, Filter> filterMap = new HashMap<>(16);
-        filterMap.put("jwt", new JwtFilter());
+        filterMap.put("jwtFilter", jwtFilterBean());
         factoryBean.setFilters(filterMap);
         factoryBean.setSecurityManager(securityManager);
-        factoryBean.setUnauthorizedUrl("/401");
+        // 自定义url规则
         Map<String, String> filterRuleMap = new HashMap<>(16);
-        filterRuleMap.put("/**", "jwt");
-        filterRuleMap.put("/401", "anon");
+        // 所有请求通过我们自己的JWTFilter
+        filterRuleMap.put("/**", "jwtFilter");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }
 
-    /**
-     * 下面的代码是添加注解支持
-     */
-    /**
-     * 开启shiro aop注解支持.
-     * 使用代理方式;所以需要开启代码支持;
-     */
+    @Bean("jwtFilter")
+    public JwtFilter jwtFilterBean() {
+        return new JwtFilter();
+    }
+
     @Bean
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
 
     @Bean
-    @DependsOn({"lifecycleBeanPostProcessor"})
-    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        advisorAutoProxyCreator.setProxyTargetClass(true);
-        return advisorAutoProxyCreator;
+    @DependsOn("lifecycleBeanPostProcessor")
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        // 强制使用cglib，防止重复代理和可能引起代理出错的问题，https://zhuanlan.zhihu.com/p/29161098
+        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+        return defaultAdvisorAutoProxyCreator;
     }
 
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-        return authorizationAttributeSourceAdvisor;
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(
+            DefaultWebSecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(securityManager);
+        return advisor;
     }
 }
+
