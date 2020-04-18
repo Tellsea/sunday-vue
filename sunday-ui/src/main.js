@@ -15,8 +15,10 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
-import api from '@/api/index.js'
+import api from '@/api/index'
+import fun from '@/utils/fun'
 
+Vue.use(fun)
 Vue.prototype.$api = api
 
 /**

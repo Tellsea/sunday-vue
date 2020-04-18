@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 /**
  * 自定义Realm
- * 
+ *
  * @author lwx
  * @date 2019/03/08
  */
@@ -71,8 +71,6 @@ public class ShiroRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken auth) throws AuthenticationException {
 		String token = (String) auth.getCredentials();
-		// 验证token是否有效、过期等，有问题则抛出异常，通过异常处理
-		JwtUtils.verify(token);
 		// 解密获得account，用于和数据库进行对比
 		String userName = JwtUtils.getClaim(token, JwtConstant.USER_NAME);
 		// 帐号为空
@@ -87,8 +85,8 @@ public class ShiroRealm extends AuthorizingRealm {
 		if (userInfo.getStatus() == 2) {
 			throw new AuthenticationException("用户已锁定，不可操作");
 		}
-		// 开始认证，要AccessToken认证通过，且Redis中存在RefreshToken，且两个Token时间戳一致
-		if (JwtUtils.verify(token) && redis.hasKey(RedisConstant.PREFIX_SHIRO_REFRESH_TOKEN + userName)) {
+		// 开始认证，要AccessToken认证通过(改为filter验证了)，且Redis中存在RefreshToken，且两个Token时间戳一致
+		if (redis.hasKey(RedisConstant.PREFIX_SHIRO_REFRESH_TOKEN + userName)) {
 			// 获取RefreshToken的时间戳
 			String currentTimeMillisRedis = redis.get(RedisConstant.PREFIX_SHIRO_REFRESH_TOKEN + userName).toString();
 			// 获取AccessToken时间戳，与RefreshToken的时间戳对比

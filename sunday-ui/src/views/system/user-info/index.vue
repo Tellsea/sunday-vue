@@ -1,36 +1,32 @@
 <template>
   <div class="app-container">
     <!-- 查询条件 -->
-    <el-collapse value="1">
-      <el-collapse-item title="" name="1">
-        <el-form :inline="true" :model="searchForm" ref="searchForm">
-          <el-form-item label="用户名" prop="userName">
-            <el-input v-model="searchForm.userName" placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item label="昵称" prop="nickName">
-            <el-input v-model="searchForm.nickName" placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item label="电话" prop="phone">
-            <el-input v-model="searchForm.phone" placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item label="状态" prop="status">
-            <el-select v-model="searchForm.status" placeholder="请选择">
-              <el-option label="请选择" value="0"></el-option>
-              <el-option label="正常" value="1"></el-option>
-              <el-option label="锁定" value="2"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="loadTable" title="查询">
-              查询
-            </el-button>
-            <el-button icon="el-icon-refresh-left" @click="handleReset" title="重置">
-              重置
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-collapse-item>
-    </el-collapse>
+    <el-form :inline="true" :model="searchForm" ref="searchForm">
+      <el-form-item label="用户名" prop="userName">
+        <el-input v-model="searchForm.userName" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item label="昵称" prop="nickName">
+        <el-input v-model="searchForm.nickName" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item label="电话" prop="phone">
+        <el-input v-model="searchForm.phone" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="searchForm.status" placeholder="请选择">
+          <el-option label="请选择" value="0"></el-option>
+          <el-option label="正常" value="1"></el-option>
+          <el-option label="锁定" value="2"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" @click="loadTable" title="查询">
+          查询
+        </el-button>
+        <el-button icon="el-icon-refresh-left" @click="handleReset" title="重置">
+          重置
+        </el-button>
+      </el-form-item>
+    </el-form>
     <!-- 操作按钮 -->
     <div class="button-container" ref="buttonContainer">
       <el-button type="primary" title="新增" icon="el-icon-plus" @click="handleAdd">新增</el-button>
@@ -38,7 +34,6 @@
     <!-- 数据表格 -->
     <el-table
       :data="tableData"
-      :height="tableHeight"
       highlight-current-row
       :header-cell-style="{background:'#eef1f6', color:'#606266'}">
       <el-table-column
@@ -222,7 +217,6 @@
           limit: 10
         },
         tableData: [],
-        tableHeight: 0,
         tableDataCount: 0,
         showForm: {},
         showDialogVisible: false,
@@ -289,7 +283,7 @@
     },
     mounted() {
       this.loadTable()
-      this.$nextTick(() => {
+      /*this.$nextTick(() => {
         let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
         let collapseHeight = this.$refs.searchForm.$el.offsetHeight
         let buttonHeight = this.$refs.buttonContainer.offsetHeight
@@ -297,7 +291,13 @@
         // console.log(paginationHeight)
         // 表格高度 = 窗口高度 - 头部高度 - 搜索条件高度 - 按钮行高度 - 上下边距 - 分页高度
         this.tableHeight = clientHeight - 84 - collapseHeight - buttonHeight - 20 - 42 - 50
-      })
+      })*/
+    },
+    created() {
+      /*this.$api.userInfo.testException().then(res => {
+        this.tableDataCount = res.count
+        this.tableData = res.data
+      })*/
     }
   }
 </script>

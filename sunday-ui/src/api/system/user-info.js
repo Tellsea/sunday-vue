@@ -15,6 +15,9 @@ const roleInfo = {
   },
   updateStatus(data) {
     return request.post('/system/userInfo/updateStatus', data)
+  },
+  testException() {
+    return request.get('/system/userInfo/testException')
   }
 }
 

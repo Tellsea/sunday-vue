@@ -51,7 +51,7 @@ service.interceptors.response.use(
       Message({
         message: res.message || 'Error',
         type: 'error',
-        duration: 5 * 1000
+        duration: 3 * 1000
       })
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
@@ -73,11 +73,29 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    let message = error.message
+    let data = error.response.data
+    if (error.response.status === 401) {
+      // to re-login
+      MessageBox.confirm('您已注销，您可以取消以停留在此页，或重新登录', '确认注销', {
+        confirmButtonText: '重新登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        store.dispatch('user/resetToken').then(() => {
+          location.reload()
+        })
+      })
+      return Promise.reject(new Error(message || 'Error'))
+    }
+
+    if (data) {
+      message = data.message
+    }
     Message({
-      message: error.message,
+      message: message,
       type: 'error',
-      duration: 5 * 1000
+      duration: 3 * 1000
     })
     return Promise.reject(error)
   }

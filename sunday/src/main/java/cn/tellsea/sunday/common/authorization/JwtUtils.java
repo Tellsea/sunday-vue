@@ -28,17 +28,13 @@ public class JwtUtils {
      * @return
      */
     public static boolean verify(String token) throws TokenExpiredException {
-        try {
-            // 帐号加JWT私钥解密
-            BaseProperties properties = SpringUtils.getBean(BaseProperties.class);
-            String secret = getClaim(token, JwtConstant.USER_NAME) + Base64Utils.decode(properties.getShiro().getEncryptJWTKey());
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            JWTVerifier verifier = JWT.require(algorithm).build();
-            DecodedJWT jwt = verifier.verify(token);
-            return true;
-        } catch (TokenExpiredException e) {
-            throw new TokenExpiredException(e.getMessage());
-        }
+        // 帐号加JWT私钥解密
+        BaseProperties properties = SpringUtils.getBean(BaseProperties.class);
+        String secret = getClaim(token, JwtConstant.USER_NAME) + Base64Utils.decode(properties.getShiro().getEncryptJWTKey());
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT jwt = verifier.verify(token);
+        return true;
     }
 
     /**

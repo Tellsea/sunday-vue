@@ -1,23 +1,19 @@
 <template>
   <div class="app-container">
     <!-- 查询条件 -->
-    <el-collapse value="1">
-      <el-collapse-item title="" name="1">
-        <el-form :inline="true" :model="searchForm" ref="searchForm">
-          <el-form-item label="角色" prop="name">
-            <el-input v-model="searchForm.name" placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="loadTable" title="查询">
-              查询
-            </el-button>
-            <el-button icon="el-icon-refresh-left" @click="handleReset" title="重置">
-              重置
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-collapse-item>
-    </el-collapse>
+    <el-form :inline="true" :model="searchForm" ref="searchForm">
+      <el-form-item label="角色" prop="name">
+        <el-input v-model="searchForm.name" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" @click="loadTable" title="查询">
+          查询
+        </el-button>
+        <el-button icon="el-icon-refresh-left" @click="handleReset" title="重置">
+          重置
+        </el-button>
+      </el-form-item>
+    </el-form>
     <!-- 操作按钮 -->
     <div class="button-container" ref="button-container">
       <el-button type="primary" icon="el-icon-plus" @click="handleAdd">新增</el-button>
@@ -210,10 +206,7 @@
         this.showDialogTitle = '编辑角色'
         this.showDialogVisible = true
         this.treeCheckStrictly = true
-        // this.dataForm = row
-        for (let attr in this.dataForm) {
-          this.dataForm[attr] = row[attr]
-        }
+        this.copyAttrToLeft(this.dataForm, row)
         if (row.resourceIds) {
           this.setTreeSelect(row.resourceIds.split(','))
         }

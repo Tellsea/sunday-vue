@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = CrudException.class)
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseResult handleCrudException(CrudException e) {
         log.error("CrudException：{}", e.getMessage() + "：影响数据库行数为0");
         return ResponseResult.errorMsg(e.getMessage());

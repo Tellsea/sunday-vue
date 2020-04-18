@@ -4,12 +4,14 @@ import cn.tellsea.sunday.common.annotation.Log;
 import cn.tellsea.sunday.common.entity.ResponseResult;
 import cn.tellsea.sunday.common.enums.CrudEnums;
 import cn.tellsea.sunday.common.enums.StatusEnums;
+import cn.tellsea.sunday.common.exception.BaseException;
 import cn.tellsea.sunday.common.exception.CrudException;
 import cn.tellsea.sunday.system.entity.UserInfo;
 import cn.tellsea.sunday.system.service.UserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,5 +61,14 @@ public class UserInfoController {
     @PostMapping("updateStatus")
     public ResponseResult updateStatus(UserInfo userInfo) throws CrudException {
         return ResponseResult.verify(CrudEnums.DELETE, userInfoService.updateStatus(userInfo));
+    }
+
+    @ApiOperation("测试异常")
+    @GetMapping("testException")
+    public ResponseResult testException() {
+        if (true) {
+            throw new BaseException("我错了，异常信息");
+        }
+        return ResponseResult.error("我错了");
     }
 }

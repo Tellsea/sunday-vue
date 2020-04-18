@@ -1,34 +1,30 @@
 <template>
   <div class="app-container">
     <!-- 查询条件 -->
-    <el-collapse value="1">
-      <el-collapse-item name="1">
-        <el-form :inline="true" :model="searchForm" ref="searchForm">
-          <!--<el-form-item label="登录时间" prop="searchTime">
-            <el-date-picker
-              v-model="searchTime"
-              type="daterange"
-              unlink-panels
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd">
-            </el-date-picker>
-          </el-form-item>-->
-          <el-form-item label="用户名" prop="userName">
-            <el-input v-model="searchForm.userName" placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="loadTable" title="查询">
-              查询
-            </el-button>
-            <el-button icon="el-icon-refresh-left" @click="handleReset" title="重置">
-              重置
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-collapse-item>
-    </el-collapse>
+    <el-form :inline="true" :model="searchForm" ref="searchForm">
+      <!--<el-form-item label="登录时间" prop="searchTime">
+        <el-date-picker
+          v-model="searchTime"
+          type="daterange"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </el-form-item>-->
+      <el-form-item label="用户名" prop="userName">
+        <el-input v-model="searchForm.userName" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" @click="loadTable" title="查询">
+          查询
+        </el-button>
+        <el-button icon="el-icon-refresh-left" @click="handleReset" title="重置">
+          重置
+        </el-button>
+      </el-form-item>
+    </el-form>
     <!-- 操作按钮 -->
     <div class="button-container">
       <el-button type="danger" icon="el-icon-delete" @click="handleDeleteBatch">

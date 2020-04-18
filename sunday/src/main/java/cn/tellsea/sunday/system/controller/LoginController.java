@@ -90,9 +90,10 @@ public class LoginController {
     @ApiOperation("根据token获取用户信息")
     @GetMapping("getUserInfo")
     public ResponseResult getUserInfo(@RequestParam("token") String token) {
-        UserInfo userInfo = new UserInfo();
         // 能进这个方法，说明头部携带了令牌，且进过了认证操作，无需再验证
         String userName = JwtUtils.getClaim(token, JwtConstant.USER_NAME);
+        // 用户信息
+        UserInfo userInfo = userInfoService.getByUserName(userName);
         // 拥有的角色
         Set<String> roles = roleInfoService.getByUserName(userName).stream().map(RoleInfo::getName).collect(Collectors.toSet());
         userInfo.setRoles(roles);

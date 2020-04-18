@@ -97,8 +97,11 @@ sunday:
     jwtTokenTimeOut: 3600
     encryptAESKey: V2FuZzkyNuYSKIuwqTQkFQSUpXVA
     encryptJWTKey: U0JBUElOENhspJrzkyNjQ1NA
-    accessTokenExpireTime: 10
+    # 访问token有效期
+    accessTokenExpireTime: 300
+    # shiro缓存有效期
+    shiroCacheExpireTime: 300
+    # 刷新token有效期
     refreshTokenExpireTime: 1800
-    shiroCacheExpireTime: 10
   aop:
     openLog: true

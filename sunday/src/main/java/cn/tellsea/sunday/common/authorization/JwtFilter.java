@@ -10,6 +10,7 @@ import cn.tellsea.sunday.common.util.SpringUtils;
 import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +28,7 @@ import java.io.PrintWriter;
  * @author Tellsea
  * @date 2020/4/10
  */
+@Slf4j
 public class JwtFilter extends BasicHttpAuthenticationFilter {
 
     /**
@@ -41,8 +43,17 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         // 判断用户是否想要登入
         if (this.isLoginAttempt(request, response)) {
             try {
+                JwtUtils.verify(this.getAuthzHeader(request));
                 // 进行Shiro的登录ShiroRealm
                 this.executeLogin(request, response);
+            } catch (TokenExpiredException e) {
+                log.info("刷新token...");
+                // 该异常为JWT的AccessToken已过期，判断RefreshToken未过期就进行AccessToken刷新
+                if (this.refreshToken(request, response)) {
+                    return true;
+                } else {
+                    return false;
+                }
             } catch (Exception e) {
                 // 认证出现异常，传递错误信息msg
                 String msg = e.getMessage();
@@ -121,11 +132,13 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         // 拿到当前Header中Authorization的AccessToken(Shiro中getAuthzHeader方法已经实现)
         String token = this.getAuthzHeader(request);
         // 获取当前Token的帐号信息
-        String account = JwtUtils.getClaim(token, JwtConstant.USER_NAME);
+        String username = JwtUtils.getClaim(token, JwtConstant.USER_NAME);
+        // redis缓存key
+        String refreshKey = RedisConstant.PREFIX_SHIRO_REFRESH_TOKEN + username;
         // 判断Redis中RefreshToken是否存在
-        if (redis.hasKey(RedisConstant.PREFIX_SHIRO_REFRESH_TOKEN + account)) {
+        if (redis.hasKey(refreshKey)) {
             // Redis中RefreshToken还存在，获取RefreshToken的时间戳
-            String currentTimeMillisRedis = redis.get(RedisConstant.PREFIX_SHIRO_REFRESH_TOKEN + account).toString();
+            String currentTimeMillisRedis = redis.get(refreshKey).toString();
             // 获取当前AccessToken中的时间戳，与RefreshToken的时间戳对比，如果当前时间戳一致，进行AccessToken刷新
             if (JwtUtils.getClaim(token, JwtConstant.CURRENT_TIME_MILLIS).equals(currentTimeMillisRedis)) {
                 // 获取当前最新时间戳
@@ -135,10 +148,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 // String refreshTokenExpireTime =
                 // PropertiesUtil.getProperty("refreshTokenExpireTime");
                 // 设置RefreshToken中的时间戳为当前最新时间戳，且刷新过期时间重新为30分钟过期(配置文件可配置refreshTokenExpireTime属性)
-                redis.set(RedisConstant.PREFIX_SHIRO_REFRESH_TOKEN + account, currentTimeMillis,
-                        properties.getShiro().getRefreshTokenExpireTime());
+                redis.set(refreshKey, currentTimeMillis, properties.getShiro().getRefreshTokenExpireTime());
                 // 刷新AccessToken，设置时间戳为当前最新时间戳
-                token = JwtUtils.sign(account, currentTimeMillis);
+                token = JwtUtils.sign(username, currentTimeMillis);
                 // 将新刷新的AccessToken再次进行Shiro的登录
                 JwtToken jwtToken = new JwtToken(token);
                 // 提交给UserRealm进行认证，如果错误他会抛出异常并被捕获，如果没有抛出异常则代表登入成功，返回true
@@ -147,9 +159,11 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
                 httpServletResponse.setHeader(JwtConstant.TOKEN_HEADER, token);
                 httpServletResponse.setHeader("Access-Control-Expose-Headers", "Authorization");
+                log.info("刷新token成功");
                 return true;
             }
         }
+        log.info("刷新token失败");
         return false;
     }
 
